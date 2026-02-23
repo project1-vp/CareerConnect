@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CareerConnect Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- AOS Animation Library -->
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<style>
+
+/* Hero Animation */
+.hero {
+    background: linear-gradient(45deg,#0d6efd,#6610f2);
+    color:white;
+    padding:120px 0;
+    animation: fadeIn 2s;
+}
+
+@keyframes fadeIn {
+    from {opacity:0; transform:translateY(40px);}
+    to {opacity:1; transform:translateY(0);}
+}
+
+/* Cards Animation */
+.category-card {
+    transition: 0.4s;
+}
+
+.category-card:hover {
+    transform: translateY(-15px) scale(1.05);
+    box-shadow:0 8px 25px rgba(0,0,0,0.3);
+}
+
+/* Button Animation */
+.btn-animate {
+    transition:0.3s;
+}
+
+.btn-animate:hover {
+    transform:scale(1.1);
+}
+
+/* Footer */
+footer {
+    background:#212529;
+    color:white;
+    padding:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+<div class="container">
+<a class="navbar-brand fw-bold" href="#">CareerConnect</a>
+<div>
+<a href="login.html" class="btn btn-outline-light me-2 btn-animate">Login</a>
+<a href="register.html" class="btn btn-warning btn-animate">Register</a>
+</div>
+</div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero text-center">
+<div class="container">
+<h1 data-aos="fade-up">Find Your Dream Job Today</h1>
+<p class="lead" data-aos="fade-up" data-aos-delay="200">
+Connecting Students & Recruiters Easily
+</p>
+<button class="btn btn-light btn-lg mt-3 btn-animate" data-aos="zoom-in">
+Explore Jobs
+</button>
+</div>
+</section>
+
+<!-- About Section -->
+<section class="py-5 text-center">
+<div class="container" data-aos="fade-right">
+<h2>About Our Portal</h2>
+<p class="text-muted">
+CareerConnect helps job seekers find jobs and recruiters hire talent easily.
+Upload resumes, search jobs, and track applications.
+</p>
+</div>
+</section>
+
+<!-- Categories -->
+<section class="py-5 bg-light">
+<div class="container">
+<h2 class="text-center mb-5" data-aos="fade-up">Popular Categories</h2>
+
+<div class="row text-center">
+<div class="col-md-4">
+<div class="card p-4 category-card" data-aos="flip-left">
+<h4>💻 IT Jobs</h4>
+<p>Developer, Tester, Designer</p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-4 category-card" data-aos="flip-up">
+<h4>📊 Marketing</h4>
+<p>Digital Marketing, Sales</p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-4 category-card" data-aos="flip-right">
+<h4>💰 Finance</h4>
+<p>Accounts, Banking</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Features -->
+<section class="py-5 text-center">
+<div class="container">
+<h2 data-aos="fade-up">Why Choose Us?</h2>
+
+<div class="row mt-4">
+<div class="col-md-4" data-aos="zoom-in">
+<h5>⚡ Fast Hiring</h5>
+<p class="text-muted">Quick recruitment process.</p>
+</div>
+
+<div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+<h5>🔒 Secure Platform</h5>
+<p class="text-muted">Data protection guaranteed.</p>
+</div>
+
+<div class="col-md-4" data-aos="zoom-in" data-aos-delay="400">
+<h5>🌍 Global Access</h5>
+<p class="text-muted">Apply anywhere.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="text-center">
+<p>© 2026 CareerConnect Portal | Final Year Project</p>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- AOS Animation -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+AOS.init();
+</script>
+
+</body>
+</html>

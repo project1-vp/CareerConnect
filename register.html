@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Register</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(45deg,#ff6a00,#ee0979);
+}
+
+.popup{
+    color:red;
+    font-size:13px;
+    margin-top:-10px;
+    margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card p-4" style="width:380px;">
+<h3 class="text-center">Register</h3>
+
+<form>
+
+<input type="text" id="name" class="form-control mb-1" placeholder="Full Name">
+<div id="nameMsg" class="popup"></div>
+
+<input type="email" id="email" class="form-control mb-1" placeholder="Email">
+<div id="emailMsg" class="popup"></div>
+
+<input type="password" id="password" class="form-control mb-1" placeholder="Password">
+<div id="passMsg" class="popup"></div>
+
+<input type="password" id="confirm" class="form-control mb-1" placeholder="Confirm Password">
+<div id="confirmMsg" class="popup"></div>
+
+<select id="role" class="form-control mb-1">
+<option value="">Select Role</option>
+<option>Job Seeker</option>
+<option>Recruiter</option>
+</select>
+<div id="roleMsg" class="popup"></div>
+
+<button class="btn btn-danger w-100 mt-3">Register</button>
+
+</form>
+</div>
+
+<script>
+
+// Name validation
+name.oninput=()=>{
+    nameMsg.innerHTML = name.value=="" ? "Name required" : "";
+};
+
+// Email validation
+email.oninput=()=>{
+    let pattern=/^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    if(email.value=="")
+        emailMsg.innerHTML="Email required";
+    else if(!email.value.match(pattern))
+        emailMsg.innerHTML="Invalid email";
+    else
+        emailMsg.innerHTML="";
+};
+
+// Password validation
+password.oninput=()=>{
+    passMsg.innerHTML =
+        password.value.length<6 ? "Min 6 characters" : "";
+};
+
+// Confirm password
+confirm.oninput=()=>{
+    confirmMsg.innerHTML =
+        confirm.value!==password.value ? "Password not match" : "";
+};
+
+// Role validation
+role.onchange=()=>{
+    roleMsg.innerHTML =
+        role.value=="" ? "Select role" : "";
+};
+
+</script>
+
+</body>
+</html>
