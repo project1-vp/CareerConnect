@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard - CareerConnect</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<style>
+:root{
+  --bg:#0f2027;
+  --bg2:#203a43;
+  --card:rgba(255,255,255,0.1);
+  --muted:#b6c6d2;
+  --accent:#00ffcc;
+  --accent2:#00c6ff;
+  --danger:#dc3545;
+  --warn:#ffb300;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  min-height:100vh;
+  display:flex;
+  background:linear-gradient(120deg,var(--bg),var(--bg2));
+  color:white;
+  overflow:hidden;
+}
+
+#particles-js{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+
+.sidebar{
+  width:250px;
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(14px);
+  padding:28px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.brand{color:var(--accent); margin:0 0 18px;}
+
+.nav-btn{
+  border:0;
+  text-align:left;
+  color:white;
+  background:transparent;
+  padding:12px 14px;
+  border-radius:14px;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+  background:linear-gradient(45deg,var(--accent),var(--accent2));
+  color:#04242c;
+  font-weight:700;
+}
+
+.logout{
+  margin-top:auto;
+  border:0;
+  background:var(--danger);
+  color:white;
+  padding:10px;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+.main{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+
+.section{display:none; width:min(980px,100%); max-height:95vh; overflow:auto;}
+.section.active{display:block;}
+
+.card{
+  background:var(--card);
+  backdrop-filter:blur(18px);
+  border-radius:20px;
+  padding:26px;
+  box-shadow:0 15px 35px rgba(0,0,0,.4);
+}
+
+h2{margin:0 0 16px;}
+p{color:var(--muted);}
+
+.grid{display:grid; gap:14px;}
+.grid.two{grid-template-columns:1fr 1fr;}
+.grid.four{grid-template-columns:1fr 1fr 1fr 1fr;}
+
+.stat{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  justify-content:center;
+  background:rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:12px 14px;
+  min-height:86px;
+}
+
+.stat small{color:var(--muted);}
+.stat strong{font-size:26px; color:var(--accent);}
+
+.sub-title{
+  margin:18px 0 10px;
+  color:var(--muted);
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+}
+
+.list{display:grid; gap:10px;}
+
+.item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  background:rgba(255,255,255,.08);
+  border-radius:12px;
+  padding:12px;
+  border:1px solid rgba(255,255,255,.08);
+  transition:transform .2s ease, border-color .2s ease;
+}
+
+.item:hover{transform:translateY(-3px); border-color:rgba(0,255,204,.35);}
+
+.item-meta b{display:block; color:#fff;}
+.item-meta span{color:var(--muted); font-size:14px; display:block;}
+
+.actions{display:flex; gap:8px; flex-wrap:wrap;}
+
+.action-btn{
+  border:0;
+  border-radius:10px;
+  padding:8px 10px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.view{color:#1f1200; background:var(--warn);}
+.delete{color:white; background:var(--danger);}
+.primary{color:#03242c; background:linear-gradient(45deg,var(--accent),var(--accent2));}
+
+.controls{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;}
+
+.input-box label{display:block; margin:0 0 6px; color:var(--muted); font-size:14px;}
+.input-box input{
+  width:100%;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:12px;
+  padding:10px 12px;
+  background:rgba(0,0,0,.2);
+  color:white;
+  outline:0;
+}
+
+.status{margin-top:10px; font-size:14px; color:var(--accent);}
+
+@media (max-width:950px){
+  body{flex-direction:column; overflow:auto;}
+  .sidebar{width:100%; flex-direction:row; flex-wrap:wrap; align-items:center;}
+  .brand{width:100%; margin-bottom:6px;}
+  .logout{margin-left:auto; margin-top:0;}
+  .grid.four,.grid.two{grid-template-columns:1fr;}
+  .item{flex-direction:column; align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+<div id="particles-js"></div>
+
+<aside class="sidebar">
+  <h2 class="brand">CareerConnect Admin</h2>
+  <button class="nav-btn active" onclick="showSection('dashboard', this)">Dashboard</button>
+  <button class="nav-btn" onclick="showSection('users', this)">Users</button>
+  <button class="nav-btn" onclick="showSection('jobs', this)">Jobs</button>
+  <button class="nav-btn" onclick="showSection('applications', this)">Applications</button>
+  <button class="nav-btn" onclick="showSection('candidates', this)">Candidates</button>
+  <button class="nav-btn" onclick="showSection('settings', this)">Settings</button>
+  <button class="logout" onclick="logout()">Logout</button>
+</aside>
+
+<main class="main">
+  <section id="dashboard" class="section active">
+    <div class="card">
+      <h2>Admin Dashboard</h2>
+      <div class="grid four">
+        <div class="stat"><small>Total Users</small><strong id="statUsers">0</strong></div>
+        <div class="stat"><small>Total Jobs</small><strong id="statJobs">0</strong></div>
+        <div class="stat"><small>Total Applications</small><strong id="statApps">0</strong></div>
+        <div class="stat"><small>Total Candidates</small><strong id="statCandidates">0</strong></div>
+      </div>
+      <div class="sub-title">Latest Activity</div>
+      <div id="latestActivity" class="list"></div>
+    </div>
+  </section>
+
+  <section id="users" class="section">
+    <div class="card">
+      <h2>Users</h2>
+      <div class="controls">
+        <button class="action-btn primary" onclick="seedUsers()">Seed Demo Users</button>
+      </div>
+      <div id="usersList" class="list"></div>
+    </div>
+  </section>
+
+  <section id="jobs" class="section">
+    <div class="card">
+      <h2>Jobs</h2>
+      <div id="jobsList" class="list"></div>
+    </div>
+  </section>
+
+  <section id="applications" class="section">
+    <div class="card">
+      <h2>Applications</h2>
+      <div id="appsList" class="list"></div>
+    </div>
+  </section>
+
+  <section id="candidates" class="section">
+    <div class="card">
+      <h2>Candidates</h2>
+      <div id="candidatesList" class="list"></div>
+    </div>
+  </section>
+
+  <section id="settings" class="section">
+    <div class="card">
+      <h2>Settings</h2>
+      <div class="controls">
+        <button class="action-btn primary" onclick="refreshAll()">Refresh Data</button>
+        <button class="action-btn delete" onclick="clearAllData()">Clear All Local Data</button>
+      </div>
+      <div class="input-box">
+        <label>Data Keys Used</label>
+        <input type="text" value="ui_users, ui_jobs, ui_jobseeker_applications, ui_candidates, ui_profile, ui_jobseeker_profile" readonly>
+      </div>
+      <div class="status" id="settingsMsg"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+particlesJS("particles-js",{ particles:{ number:{value:60}, size:{value:3}, color:{value:"#00ffcc"}, move:{speed:2} } });
+
+const API_BASE = "http://localhost:5000/api";
+const token = localStorage.getItem("token");
+const role = (localStorage.getItem("role") || "").toLowerCase().trim();
+let usersData = [];
+let jobsData = [];
+let appsData = [];
+
+if(!token || role !== "admin"){
+  alert("Admin access only");
+  window.location.href = "login.html";
+}
+
+function showSection(id, button){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  if(button) button.classList.add("active");
+}
+
+async function api(path, options = {}){
+  const headers = { Authorization: `Bearer ${token}` };
+  if(options.body && !options.noJson){ headers["Content-Type"] = "application/json"; }
+
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: options.method || "GET",
+    headers,
+    body: options.body ? (options.noJson ? options.body : JSON.stringify(options.body)) : undefined
+  });
+
+  const data = await res.json().catch(() => ({}));
+
+  if(res.status === 401){ logout(); throw new Error("Unauthorized"); }
+  if(!res.ok){ throw new Error(data.message || "Request failed"); }
+  return data;
+}
+
+async function loadStats(){
+  const s = await api("/admin/stats");
+  statUsers.textContent = s.users || 0;
+  statJobs.textContent = s.jobs || 0;
+  statApps.textContent = s.applications || 0;
+  statCandidates.textContent = s.job_seekers || 0;
+}
+
+async function loadUsers(){
+  usersData = await api("/admin/users");
+  renderUsers();
+}
+
+async function loadJobs(){
+  jobsData = await api("/admin/jobs");
+  renderJobs();
+  renderLatest();
+}
+
+async function loadApplications(){
+  appsData = await api("/admin/applications");
+  renderApplications();
+  renderCandidates();
+}
+
+function renderLatest(){
+  latestActivity.innerHTML = "";
+  const items = jobsData.slice(0,3);
+  if(!items.length){
+    latestActivity.innerHTML = "<div class='item'><div class='item-meta'><b>No recent activity</b><span>Activity will appear when data is created.</span></div></div>";
+    return;
+  }
+
+  items.forEach(j => {
+    latestActivity.innerHTML += `
+      <div class="item">
+        <div class="item-meta">
+          <b>Job Posted: ${j.title || "Untitled"}</b>
+          <span>${j.company || "Unknown company"}</span>
+          <span>${j.created_at ? new Date(j.created_at).toLocaleString() : "-"}</span>
+        </div>
+      </div>`;
+  });
+}
+
+function renderUsers(){
+  usersList.innerHTML = "";
+  if(!usersData.length){
+    usersList.innerHTML = "<div class='item'><div class='item-meta'><b>No users found</b></div></div>";
+    return;
+  }
+
+  usersData.forEach(u => {
+    usersList.innerHTML += `
+      <div class="item">
+        <div class="item-meta">
+          <b>${u.name || "Unnamed"}</b>
+          <span>${u.email || "No email"}</span>
+          <span>Role: ${u.role || "user"}</span>
+        </div>
+        <div class="actions">
+          <button class="action-btn delete" onclick="deleteUser(${u.id})">Delete</button>
+        </div>
+      </div>`;
+  });
+}
+
+function renderJobs(){
+  jobsList.innerHTML = "";
+  if(!jobsData.length){
+    jobsList.innerHTML = "<div class='item'><div class='item-meta'><b>No jobs found</b></div></div>";
+    return;
+  }
+
+  jobsData.forEach(j => {
+    jobsList.innerHTML += `
+      <div class="item">
+        <div class="item-meta">
+          <b>${j.title || "Untitled"}</b>
+          <span>${j.company || "Unknown"} | ${j.job_type || "N/A"}</span>
+          <span>Experience: ${j.experience || "N/A"} | Salary: ${j.salary || "N/A"}</span>
+          <span>Recruiter: ${j.recruiter_name || "-"} (${j.recruiter_email || "-"})</span>
+        </div>
+        <div class="actions">
+          <button class="action-btn delete" onclick="deleteJob(${j.id})">Delete</button>
+        </div>
+      </div>`;
+  });
+}
+
+function renderApplications(){
+  appsList.innerHTML = "";
+  if(!appsData.length){
+    appsList.innerHTML = "<div class='item'><div class='item-meta'><b>No applications found</b></div></div>";
+    return;
+  }
+
+  appsData.forEach(a => {
+    appsList.innerHTML += `
+      <div class="item">
+        <div class="item-meta">
+          <b>${a.title || "Untitled"}</b>
+          <span>${a.company || "Unknown"}</span>
+          <span>${a.seeker_name || "Candidate"} | Status: ${a.status || "Applied"}</span>
+        </div>
+        <div class="actions">
+          <button class="action-btn delete" onclick="deleteApplication(${a.id})">Delete</button>
+        </div>
+      </div>`;
+  });
+}
+
+function renderCandidates(){
+  candidatesList.innerHTML = "";
+  if(!appsData.length){
+    candidatesList.innerHTML = "<div class='item'><div class='item-meta'><b>No candidates found</b></div></div>";
+    return;
+  }
+
+  const unique = {};
+  appsData.forEach(a => {
+    if(!unique[a.seeker_email]) unique[a.seeker_email] = a;
+  });
+
+  Object.values(unique).forEach(c => {
+    candidatesList.innerHTML += `
+      <div class="item">
+        <div class="item-meta">
+          <b>${c.seeker_name || "Unnamed"}</b>
+          <span>${c.seeker_email || ""}</span>
+          <span>Latest status: ${c.status || "Applied"}</span>
+        </div>
+      </div>`;
+  });
+}
+
+async function deleteUser(id){
+  if(!confirm("Delete this user?")) return;
+  try{ await api(`/admin/users/${id}`, { method:"DELETE" }); await refreshAll(); }
+  catch(err){ alert(err.message); }
+}
+
+async function deleteJob(id){
+  if(!confirm("Delete this job?")) return;
+  try{ await api(`/admin/jobs/${id}`, { method:"DELETE" }); await refreshAll(); }
+  catch(err){ alert(err.message); }
+}
+
+async function deleteApplication(id){
+  if(!confirm("Delete this application?")) return;
+  try{ await api(`/admin/applications/${id}`, { method:"DELETE" }); await refreshAll(); }
+  catch(err){ alert(err.message); }
+}
+
+function seedUsers(){
+  alert("Disabled in API mode.");
+}
+
+function clearAllData(){
+  alert("Disabled in API mode. Use backend/admin APIs.");
+}
+
+async function refreshAll(){
+  try{
+    await loadStats();
+    await loadUsers();
+    await loadJobs();
+    await loadApplications();
+    settingsMsg.textContent = "Synced with backend.";
+  }catch(err){
+    settingsMsg.textContent = err.message;
+  }
+}
+
+refreshAll();
+
+function logout(){
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  window.location.href = "login.html";
+}
+</script>
+</body>
+</html>
+
+

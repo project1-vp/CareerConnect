@@ -2,19 +2,25 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 
-// Enable CORS (frontend can connect)
+console.log("SERVER LOADED");
+
 app.use(cors());
-
-// Enable JSON body
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "storage", "uploads")));
 
-// Use routes
 app.use("/api", require("./routes"));
 
-// Start server
-app.listen(process.env.PORT, () => {
-  console.log(`🚀 Server running on port ${process.env.PORT}`);
+app.get("/", (req, res) => {
+  res.send("Backend Working");
 });
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+

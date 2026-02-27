@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Recruiter Dashboard - CareerConnect</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<style>
+:root{
+  --bg:#0f2027;
+  --bg2:#203a43;
+  --card:rgba(255,255,255,0.1);
+  --muted:#b6c6d2;
+  --accent:#00ffcc;
+  --accent2:#00c6ff;
+  --danger:#dc3545;
+  --warn:#ffb300;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  min-height:100vh;
+  display:flex;
+  background:linear-gradient(120deg,var(--bg),var(--bg2));
+  color:white;
+  overflow:hidden;
+}
+
+#particles-js{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+
+.sidebar{
+  width:250px;
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(14px);
+  padding:28px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.brand{
+  color:var(--accent);
+  margin:0 0 18px;
+}
+
+.nav-btn{
+  border:0;
+  text-align:left;
+  color:white;
+  background:transparent;
+  padding:12px 14px;
+  border-radius:14px;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+  background:linear-gradient(45deg,var(--accent),var(--accent2));
+  color:#04242c;
+  font-weight:700;
+}
+
+.logout{
+  margin-top:auto;
+  border:0;
+  background:var(--danger);
+  color:white;
+  padding:10px;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+.main{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+
+.section{display:none; width:min(860px,100%); max-height:95vh; overflow:auto;}
+.section.active{display:block;}
+
+.card{
+  background:var(--card);
+  backdrop-filter:blur(18px);
+  border-radius:20px;
+  padding:26px;
+  box-shadow:0 15px 35px rgba(0,0,0,.4);
+}
+
+h2{margin:0 0 16px;}
+p{color:var(--muted);}
+
+.grid{display:grid; gap:14px;}
+.grid.two{grid-template-columns:1fr 1fr;}
+.grid.three{grid-template-columns:1fr 1fr 1fr;}
+
+.input-box label{
+  display:block;
+  margin:0 0 6px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.input-box input,
+.input-box select,
+.input-box textarea{
+  width:100%;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:12px;
+  padding:10px 12px;
+  background:rgba(0,0,0,.2);
+  color:white;
+  outline:0;
+}
+
+.input-box textarea{min-height:90px; resize:vertical;}
+
+.primary{
+  border:0;
+  margin-top:14px;
+  padding:11px 14px;
+  border-radius:20px;
+  background:linear-gradient(45deg,var(--accent),var(--accent2));
+  color:#05242c;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.status{
+  margin-top:10px;
+  font-size:14px;
+  color:var(--accent);
+}
+
+.stat{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:12px 14px;
+}
+
+.badge{
+  font-size:24px;
+  font-weight:700;
+  color:var(--accent);
+}
+
+.profile-line{
+  margin:8px 0;
+  color:#d9e3ea;
+}
+
+.sub-title{
+  margin:18px 0 10px;
+  color:var(--muted);
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+}
+
+.list{
+  display:grid;
+  gap:10px;
+}
+
+.item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  background:rgba(255,255,255,.08);
+  border-radius:12px;
+  padding:12px;
+}
+
+.item-meta b{display:block; color:#fff;}
+.item-meta span{color:var(--muted); font-size:14px; display:block;}
+
+.actions{display:flex; gap:8px; flex-wrap:wrap;}
+
+.action-btn{
+  border:0;
+  border-radius:10px;
+  padding:8px 10px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.view{color:#03242c; background:linear-gradient(45deg,var(--accent),var(--accent2));}
+.edit{color:#1f1200; background:var(--warn);}
+.delete{color:white; background:var(--danger);}
+
+@media (max-width:900px){
+  body{flex-direction:column; overflow:auto;}
+  .sidebar{width:100%; flex-direction:row; flex-wrap:wrap; align-items:center;}
+  .brand{width:100%; margin-bottom:6px;}
+  .logout{margin-left:auto; margin-top:0;}
+  .grid.two,.grid.three{grid-template-columns:1fr;}
+  .item{flex-direction:column; align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+<div id="particles-js"></div>
+
+<aside class="sidebar">
+  <h2 class="brand">CareerConnect</h2>
+  <button class="nav-btn active" onclick="showSection('dashboard', this)">Dashboard</button>
+  <button class="nav-btn" onclick="showSection('post', this)">Post Job</button>
+  <button class="nav-btn" onclick="showSection('jobs', this)">Jobs</button>
+  <button class="nav-btn" onclick="showSection('profile', this)">Profile</button>
+  <button class="logout" onclick="logout()">Logout</button>
+</aside>
+
+<main class="main">
+  <section id="dashboard" class="section active">
+    <div class="card">
+      <h2>Dashboard Overview</h2>
+      <div class="grid two">
+        <div class="stat">
+          <span>Total Jobs Created (UI)</span>
+          <span class="badge" id="jobCount">0</span>
+        </div>
+        <div class="stat">
+          <span>Total Candidates Applied</span>
+          <span class="badge" id="candidateCount">0</span>
+        </div>
+      </div>
+      <div class="stat" style="margin-top:10px;">
+        <span>Profile Completion</span>
+        <span class="badge" id="profileStatus">0%</span>
+      </div>
+
+      <div class="sub-title">Add Candidate</div>
+      <form id="candidateForm" onsubmit="saveCandidate(event)">
+        <div class="grid three">
+          <div class="input-box">
+            <label for="cName">Candidate Name</label>
+            <input id="cName" type="text" required>
+          </div>
+          <div class="input-box">
+            <label for="cExperience">Experience</label>
+            <input id="cExperience" type="text" required>
+          </div>
+          <div class="input-box">
+            <label for="cResume">Resume URL</label>
+            <input id="cResume" type="url" required>
+          </div>
+        </div>
+        <button class="primary" type="submit">Save Candidate</button>
+        <div class="status" id="candidateMsg"></div>
+      </form>
+
+      <div class="sub-title">Candidate Details</div>
+      <div id="candidateList" class="list"></div>
+
+      <p style="margin-top:14px;">Note: This is UI-only. Current backend supports login/register APIs.</p>
+    </div>
+  </section>
+
+  <section id="post" class="section">
+    <div class="card">
+      <h2>Post New Job</h2>
+      <form id="jobForm" onsubmit="saveJob(event)">
+        <div class="grid two">
+          <div class="input-box">
+            <label for="title">Job Title</label>
+            <input id="title" type="text" required>
+          </div>
+          <div class="input-box">
+            <label for="company">Company Name</label>
+            <input id="company" type="text" required>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="input-box">
+            <label for="jobType">Job Type</label>
+            <select id="jobType" required>
+              <option value="">Select</option>
+              <option>Full-Time</option>
+              <option>Part-Time</option>
+              <option>Internship</option>
+            </select>
+          </div>
+          <div class="input-box">
+            <label for="salary">Salary</label>
+            <input id="salary" type="text" required>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="input-box">
+            <label for="experience">Experience</label>
+            <input id="experience" type="text" required>
+          </div>
+          <div class="input-box">
+            <label for="location">Location</label>
+            <input id="location" type="text" required>
+          </div>
+        </div>
+        <div class="input-box">
+          <label for="desc">Job Description</label>
+          <textarea id="desc" required></textarea>
+        </div>
+        <button class="primary" type="submit">Save Job</button>
+        <div class="status" id="jobMsg"></div>
+      </form>
+    </div>
+  </section>
+
+  <section id="jobs" class="section">
+    <div class="card">
+      <h2>All Posted Jobs</h2>
+      <div id="jobsList" class="list"></div>
+    </div>
+  </section>
+
+  <section id="profile" class="section">
+    <div class="card">
+      <h2>Recruiter Profile</h2>
+      <form id="profileForm" onsubmit="saveProfile(event)">
+        <div class="grid two">
+          <div class="input-box">
+            <label for="rName">Full Name</label>
+            <input id="rName" type="text" required>
+          </div>
+          <div class="input-box">
+            <label for="rEmail">Email</label>
+            <input id="rEmail" type="email" required>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="input-box">
+            <label for="rPhone">Phone</label>
+            <input id="rPhone" type="text" required>
+          </div>
+          <div class="input-box">
+            <label for="rCompany">Company</label>
+            <input id="rCompany" type="text" required>
+          </div>
+        </div>
+        <div class="input-box">
+          <label for="rBio">Bio</label>
+          <textarea id="rBio" required></textarea>
+        </div>
+        <button class="primary" type="submit">Save Profile</button>
+        <div class="status" id="profileMsg"></div>
+      </form>
+
+      <div style="margin-top:18px; padding-top:14px; border-top:1px solid rgba(255,255,255,.2);">
+        <h3 style="margin:0 0 8px;">Preview</h3>
+        <div class="profile-line" id="pvName">Name: -</div>
+        <div class="profile-line" id="pvEmail">Email: -</div>
+        <div class="profile-line" id="pvPhone">Phone: -</div>
+        <div class="profile-line" id="pvCompany">Company: -</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+particlesJS("particles-js",{ particles:{ number:{value:60}, size:{value:3}, color:{value:"#00ffcc"}, move:{speed:2} } });
+
+const API_BASE = "http://localhost:5000/api";
+const token = localStorage.getItem("token");
+const role = (localStorage.getItem("role") || "").toLowerCase();
+let recruiterJobs = [];
+
+if(!token || role !== "recruiter"){
+  alert("Recruiter access only");
+  window.location.href = "login.html";
+}
+
+function showSection(id, button){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  if(button){ button.classList.add("active"); }
+}
+
+async function api(path, options = {}){
+  const headers = { Authorization: `Bearer ${token}` };
+  if(options.body && !options.noJson){ headers["Content-Type"] = "application/json"; }
+
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: options.method || "GET",
+    headers,
+    body: options.body ? (options.noJson ? options.body : JSON.stringify(options.body)) : undefined
+  });
+
+  const data = await res.json().catch(() => ({}));
+
+  if(res.status === 401){
+    logout();
+    throw new Error("Unauthorized");
+  }
+
+  if(!res.ok){
+    throw new Error(data.message || "Request failed");
+  }
+
+  return data;
+}
+
+function calculateProfileCompletion(profile, me){
+  const values = [me?.name, me?.email, profile?.phone, profile?.company_name, profile?.about_company];
+  const done = values.filter(v => (v || "").toString().trim()).length;
+  return Math.round((done / values.length) * 100);
+}
+
+async function loadProfile(){
+  try{
+    const me = await api("/me");
+    const profile = await api("/recruiter/profile");
+
+    rName.value = me.name || "";
+    rEmail.value = me.email || "";
+    rName.readOnly = true;
+    rEmail.readOnly = true;
+
+    rPhone.value = profile.phone || "";
+    rCompany.value = profile.company_name || "";
+    rBio.value = profile.about_company || "";
+
+    pvName.textContent = `Name: ${me.name || "-"}`;
+    pvEmail.textContent = `Email: ${me.email || "-"}`;
+    pvPhone.textContent = `Phone: ${profile.phone || "-"}`;
+    pvCompany.textContent = `Company: ${profile.company_name || "-"}`;
+
+    profileStatus.textContent = `${calculateProfileCompletion(profile, me)}%`;
+  }catch(err){
+    profileMsg.textContent = err.message;
+  }
+}
+
+async function saveProfile(e){
+  e.preventDefault();
+  try{
+    await api("/recruiter/profile", {
+      method:"PUT",
+      body:{
+        company_name: rCompany.value.trim(),
+        phone: rPhone.value.trim(),
+        location: null,
+        website: null,
+        about_company: rBio.value.trim()
+      }
+    });
+    profileMsg.textContent = "Profile saved successfully.";
+    await loadProfile();
+  }catch(err){
+    profileMsg.textContent = err.message;
+  }
+}
+
+async function loadJobs(){
+  recruiterJobs = await api("/recruiter/jobs");
+  jobCount.textContent = recruiterJobs.length;
+  renderJobs();
+}
+
+function renderJobs(){
+  jobsList.innerHTML = "";
+  if(recruiterJobs.length === 0){
+    jobsList.innerHTML = "<div class='item'><div class='item-meta'><b>No jobs posted yet</b><span>Create one from Post Job section.</span></div></div>";
+    return;
+  }
+
+  recruiterJobs.forEach(j => {
+    jobsList.innerHTML += `
+      <div class="item">
+        <div class="item-meta">
+          <b>${j.title}</b>
+          <span>${j.company} | ${j.job_type || "N/A"}</span>
+          <span>Experience: ${j.experience || "N/A"} | Salary: ${j.salary || "N/A"}</span>
+        </div>
+        <div class="actions">
+          <button class="action-btn edit" onclick="editJob(${j.id})">Edit</button>
+          <button class="action-btn delete" onclick="deleteJob(${j.id})">Delete</button>
+        </div>
+      </div>`;
+  });
+}
+
+async function saveJob(e){
+  e.preventDefault();
+
+  const titleEl = document.getElementById("title");
+  const companyEl = document.getElementById("company");
+  const jobTypeEl = document.getElementById("jobType");
+  const salaryEl = document.getElementById("salary");
+  const experienceEl = document.getElementById("experience");
+  const locationEl = document.getElementById("location");
+  const descEl = document.getElementById("desc");
+
+  try{
+    await api("/recruiter/jobs", {
+      method:"POST",
+      body:{
+        title: (titleEl.value || "").trim(),
+        company: (companyEl.value || "").trim(),
+        job_type: jobTypeEl.value,
+        salary: (salaryEl.value || "").trim(),
+        experience: (experienceEl.value || "").trim(),
+        location: (locationEl.value || "").trim(),
+        description: (descEl.value || "").trim()
+      }
+    });
+    jobMsg.textContent = "Job saved successfully.";
+    jobForm.reset();
+    await loadJobs();
+    await loadCandidates();
+  }catch(err){
+    jobMsg.textContent = err.message;
+  }
+}
+
+async function editJob(id){
+  const j = recruiterJobs.find(x => x.id === id);
+  if(!j) return;
+
+  const newTitle = prompt("Edit title:", j.title); if(newTitle === null) return;
+  const newCompany = prompt("Edit company:", j.company); if(newCompany === null) return;
+  const newExp = prompt("Edit experience:", j.experience || ""); if(newExp === null) return;
+
+  try{
+    await api(`/recruiter/jobs/${id}`, {
+      method:"PUT",
+      body:{
+        title: newTitle.trim() || j.title,
+        company: newCompany.trim() || j.company,
+        job_type: j.job_type || "Full-Time",
+        salary: j.salary || "",
+        experience: newExp.trim() || j.experience || "",
+        location: j.location || "",
+        description: j.description || "",
+        status: j.status || "open"
+      }
+    });
+    await loadJobs();
+    await loadCandidates();
+  }catch(err){
+    alert(err.message);
+  }
+}
+
+async function deleteJob(id){
+  if(!confirm("Delete this job?")) return;
+  try{
+    await api(`/recruiter/jobs/${id}`, { method:"DELETE" });
+    await loadJobs();
+    await loadCandidates();
+  }catch(err){
+    alert(err.message);
+  }
+}
+
+async function loadCandidates(){
+  candidateList.innerHTML = "";
+
+  if(recruiterJobs.length === 0){
+    candidateCount.textContent = "0";
+    candidateList.innerHTML = "<div class='item'><div class='item-meta'><b>No applications yet</b><span>Applications will appear here when job seekers apply.</span></div></div>";
+    return;
+  }
+
+  let all = [];
+  for(const job of recruiterJobs){
+    try{
+      const rows = await api(`/recruiter/jobs/${job.id}/applications`);
+      rows.forEach(r => all.push({ ...r, jobTitle: job.title }));
+    }catch(_err){}
+  }
+
+  candidateCount.textContent = all.length;
+
+  if(all.length === 0){
+    candidateList.innerHTML = "<div class='item'><div class='item-meta'><b>No applications yet</b><span>Applications will appear here when job seekers apply.</span></div></div>";
+    return;
+  }
+
+  all.forEach(c => {
+    candidateList.innerHTML += `
+      <div class="item">
+        <div class="item-meta">
+          <b>${c.name || "Candidate"}</b>
+          <span>Job: ${c.jobTitle}</span>
+          <span>Experience: ${c.experience || "N/A"}</span>
+          <span>Status: ${c.status || "Applied"}</span>
+        </div>
+        <div class="actions">
+          ${c.resume_url ? `<a class="action-btn view" href="${c.resume_url}" target="_blank" rel="noopener noreferrer">Preview Resume</a><a class="action-btn edit" href="${c.resume_url}" download>Download Resume</a>` : "<span class='action-btn delete' style='cursor:default;'>No Resume</span>"}
+        </div>
+      </div>`;
+  });
+}
+
+function saveCandidate(e){
+  e.preventDefault();
+  candidateMsg.textContent = "Candidate list is auto-generated from job applications.";
+}
+
+function editCandidate(){ alert("Candidates are managed by job seeker applications."); }
+function deleteCandidate(){ alert("Candidates are managed by job seeker applications."); }
+
+async function hydrate(){
+  try{
+    await loadProfile();
+    await loadJobs();
+    await loadCandidates();
+  }catch(err){
+    console.error(err);
+  }
+}
+
+hydrate();
+
+function logout(){
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  window.location.href = "login.html";
+}
+</script>
+</body>
+</html>
+
+
+
+

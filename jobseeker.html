@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Job Seeker Dashboard - CareerConnect</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<style>
+:root{
+  --bg:#0f2027;
+  --bg2:#203a43;
+  --card:rgba(255,255,255,0.1);
+  --muted:#b6c6d2;
+  --accent:#00ffcc;
+  --accent2:#00c6ff;
+  --danger:#dc3545;
+  --warn:#ffb300;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  min-height:100vh;
+  display:flex;
+  background:linear-gradient(120deg,var(--bg),var(--bg2));
+  color:white;
+  overflow:hidden;
+}
+
+#particles-js{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+
+.sidebar{
+  width:250px;
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(14px);
+  padding:28px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.brand{
+  color:var(--accent);
+  margin:0 0 18px;
+}
+
+.nav-btn{
+  border:0;
+  text-align:left;
+  color:white;
+  background:transparent;
+  padding:12px 14px;
+  border-radius:14px;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+  background:linear-gradient(45deg,var(--accent),var(--accent2));
+  color:#04242c;
+  font-weight:700;
+}
+
+.logout{
+  margin-top:auto;
+  border:0;
+  background:var(--danger);
+  color:white;
+  padding:10px;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+.main{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+
+.section{display:none; width:min(920px,100%); max-height:95vh; overflow:auto;}
+.section.active{display:block;}
+
+.card{
+  background:var(--card);
+  backdrop-filter:blur(18px);
+  border-radius:20px;
+  padding:26px;
+  box-shadow:0 15px 35px rgba(0,0,0,.4);
+}
+
+h2{margin:0 0 16px;}
+p{color:var(--muted);}
+
+.grid{display:grid; gap:14px;}
+.grid.two{grid-template-columns:1fr 1fr;}
+
+.input-box label{
+  display:block;
+  margin:0 0 6px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.input-box input,
+.input-box textarea{
+  width:100%;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:12px;
+  padding:10px 12px;
+  background:rgba(0,0,0,.2);
+  color:white;
+  outline:0;
+}
+
+.input-box textarea{min-height:90px; resize:vertical;}
+
+.quick-tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+.tag-btn{
+  border:0;
+  border-radius:999px;
+  padding:7px 10px;
+  font-size:12px;
+  cursor:pointer;
+  background:rgba(255,255,255,.15);
+  color:white;
+}
+
+.primary{
+  border:0;
+  margin-top:14px;
+  padding:11px 14px;
+  border-radius:20px;
+  background:linear-gradient(45deg,var(--accent),var(--accent2));
+  color:#05242c;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.status{
+  margin-top:10px;
+  font-size:14px;
+  color:var(--accent);
+}
+
+.stat{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:12px 14px;
+}
+
+.badge{
+  font-size:24px;
+  font-weight:700;
+  color:var(--accent);
+}
+
+.sub-title{
+  margin:18px 0 10px;
+  color:var(--muted);
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+}
+
+.list{
+  display:grid;
+  gap:10px;
+}
+
+.item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  background:rgba(255,255,255,.08);
+  border-radius:12px;
+  padding:12px;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  animation:cardIn .45s ease both;
+}
+
+.item:hover{
+  transform:translateY(-6px) scale(1.01);
+  border-color:rgba(0,255,204,.45);
+  box-shadow:0 14px 26px rgba(0,0,0,.35), 0 0 0 1px rgba(0,255,204,.15) inset;
+}
+
+@keyframes cardIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+.item-meta b{display:block; color:#fff;}
+.item-meta span{color:var(--muted); font-size:14px; display:block;}
+
+.actions{display:flex; gap:8px; flex-wrap:wrap;}
+
+.action-btn{
+  border:0;
+  border-radius:10px;
+  padding:8px 10px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.apply{color:#03242c; background:linear-gradient(45deg,var(--accent),var(--accent2));}
+.delete{color:white; background:var(--danger);}
+.view{color:#1f1200; background:var(--warn);}
+
+@media (max-width:900px){
+  body{flex-direction:column; overflow:auto;}
+  .sidebar{width:100%; flex-direction:row; flex-wrap:wrap; align-items:center;}
+  .brand{width:100%; margin-bottom:6px;}
+  .logout{margin-left:auto; margin-top:0;}
+  .grid.two{grid-template-columns:1fr;}
+  .item{flex-direction:column; align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+<div id="particles-js"></div>
+
+<aside class="sidebar">
+  <h2 class="brand">CareerConnect</h2>
+  <button class="nav-btn active" onclick="showSection('dashboard', this)">Dashboard</button>
+  <button class="nav-btn" onclick="showSection('browse', this)">Browse Jobs</button>
+  <button class="nav-btn" onclick="showSection('applications', this)">My Applications</button>
+  <button class="nav-btn" onclick="showSection('profile', this)">Profile</button>
+  <button class="logout" onclick="logout()">Logout</button>
+</aside>
+
+<main class="main">
+  <section id="dashboard" class="section active">
+    <div class="card">
+      <h2>Dashboard Overview</h2>
+      <div class="grid two">
+        <div class="stat">
+          <span>Total Available Jobs</span>
+          <span class="badge" id="availableJobsCount">0</span>
+        </div>
+        <div class="stat">
+          <span>My Applications</span>
+          <span class="badge" id="myAppliedCount">0</span>
+        </div>
+      </div>
+      <div class="stat" style="margin-top:10px;">
+        <span>Profile Completion</span>
+        <span class="badge" id="profileStatus">0%</span>
+      </div>
+
+      <div class="sub-title">Recent Applications</div>
+      <div id="recentApplications" class="list"></div>
+    </div>
+  </section>
+
+  <section id="browse" class="section">
+    <div class="card">
+      <h2>Browse Jobs</h2>
+      <p>Complete your profile first, then apply to jobs.</p>
+      <div id="jobsList" class="list"></div>
+    </div>
+  </section>
+
+  <section id="applications" class="section">
+    <div class="card">
+      <h2>My Applications</h2>
+      <div id="applicationsList" class="list"></div>
+    </div>
+  </section>
+
+  <section id="profile" class="section">
+    <div class="card">
+      <h2>Job Seeker Profile</h2>
+      <form id="profileForm" onsubmit="saveProfile(event)">
+        <div class="grid two">
+          <div class="input-box">
+            <label for="sName">Full Name</label>
+            <input id="sName" type="text" required>
+          </div>
+          <div class="input-box">
+            <label for="sEmail">Email</label>
+            <input id="sEmail" type="email" required>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="input-box">
+            <label for="sPhone">Phone</label>
+            <input id="sPhone" type="text" required>
+          </div>
+          <div class="input-box">
+            <label for="sExperience">Experience</label>
+            <input id="sExperience" type="text" required>
+          </div>
+        </div>
+        <div class="input-box">
+          <label for="sSkills">Skills</label>
+          <input id="sSkills" type="text" required>
+          <div class="quick-tags">
+            <button class="tag-btn" type="button" onclick="addSkillTag('Final Year Project')">Final Year Project</button>
+            <button class="tag-btn" type="button" onclick="addSkillTag('MS-CIT')">MS-CIT</button>
+            <button class="tag-btn" type="button" onclick="addSkillTag('HTML/CSS')">HTML/CSS</button>
+            <button class="tag-btn" type="button" onclick="addSkillTag('JavaScript')">JavaScript</button>
+          </div>
+        </div>
+        <div class="input-box">
+          <label for="sResume">Resume URL</label>
+          <input id="sResume" type="url" required>
+          <div class="quick-tags">
+            <input id="sResumeFile" type="file" accept=".pdf,.doc,.docx">
+            <button class="tag-btn" type="button" onclick="uploadResumeFile()">Upload Resume File</button>
+          </div>
+          <div class="status" id="resumeUploadMsg"></div>
+        </div>
+        <div class="input-box">
+          <label for="sSummary">Profile Summary</label>
+          <textarea id="sSummary" required></textarea>
+          <div class="quick-tags">
+            <button class="tag-btn" type="button" onclick="appendSummary('Completed Final Year Project in web application development.')">+ Final Year Project</button>
+            <button class="tag-btn" type="button" onclick="appendSummary('Completed MS-CIT certification with strong computer fundamentals.')">+ MS-CIT</button>
+          </div>
+        </div>
+        <button class="primary" type="submit">Save Profile</button>
+        <div class="status" id="profileMsg"></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<script>
+particlesJS("particles-js",{ particles:{ number:{value:60}, size:{value:3}, color:{value:"#00ffcc"}, move:{speed:2} } });
+
+const API_BASE = "http://localhost:5000/api";
+const token = localStorage.getItem("token");
+const role = (localStorage.getItem("role") || "").toLowerCase().trim();
+let jobsData = [];
+let applicationsData = [];
+let uploadedResumeUrl = "";
+
+if(!token || !(role === "job seeker" || role === "jobseeker" || role === "seeker")){
+  alert("Job seeker access only");
+  window.location.href = "login.html";
+}
+
+function showSection(id, button){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  if(button){ button.classList.add("active"); }
+}
+
+async function api(path, options = {}){
+  const headers = { Authorization: `Bearer ${token}` };
+  if(options.body && !options.noJson){ headers["Content-Type"] = "application/json"; }
+
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: options.method || "GET",
+    headers,
+    body: options.body ? (options.noJson ? options.body : JSON.stringify(options.body)) : undefined
+  });
+
+  const data = await res.json().catch(() => ({}));
+
+  if(res.status === 401){ logout(); throw new Error("Unauthorized"); }
+  if(!res.ok){ throw new Error(data.message || "Request failed"); }
+  return data;
+}
+
+function calculateProfileCompletion(me, p){
+  const values = [me?.name, me?.email, p?.phone, p?.experience, p?.skills, p?.resume_url, p?.summary];
+  const done = values.filter(v => (v || "").toString().trim()).length;
+  return Math.round((done / values.length) * 100);
+}
+
+function addSkillTag(tag){
+  const current = sSkills.value.trim();
+  if(!current){ sSkills.value = tag; return; }
+  if(!current.toLowerCase().includes(tag.toLowerCase())) sSkills.value = `${current}, ${tag}`;
+}
+
+function appendSummary(line){
+  const current = sSummary.value.trim();
+  if(!current){ sSummary.value = line; return; }
+  if(!current.toLowerCase().includes(line.toLowerCase())) sSummary.value = `${current}\n${line}`;
+}
+
+function openProfileSection(){
+  const profileBtn = Array.from(document.querySelectorAll(".nav-btn")).find(b => (b.textContent || "").trim().toLowerCase() === "profile");
+  showSection("profile", profileBtn || null);
+}
+
+async function confirmProfileBeforeApply(){
+  const me = await api("/me");
+  const p = await api("/jobseeker/profile");
+
+  const required = [
+    { key:"name", value: me.name },
+    { key:"email", value: me.email },
+    { key:"phone", value: p.phone },
+    { key:"experience", value: p.experience },
+    { key:"skills", value: p.skills },
+    { key:"resume", value: p.resume_url },
+    { key:"summary", value: p.summary }
+  ];
+
+  const missing = required.filter(x => !(x.value || "").toString().trim()).map(x => x.key);
+
+  if(missing.length > 0){
+    alert(`Complete profile before apply. Missing: ${missing.join(", ")}`);
+    openProfileSection();
+    return false;
+  }
+
+  const preview =
+`Apply with this profile?\n\n` +
+`Name: ${me.name}\n` +
+`Email: ${me.email}\n` +
+`Phone: ${p.phone}\n` +
+`Experience: ${p.experience}\n` +
+`Skills: ${p.skills}\n` +
+`Resume: ${p.resume_url}\n\n` +
+`Press OK to Apply, Cancel to Edit Profile.`;
+
+  const proceed = confirm(preview);
+  if(!proceed){
+    openProfileSection();
+    return false;
+  }
+
+  return true;
+}
+function promptWithdrawalReason(){
+  const options = ["Higher studies","Accepted another offer","Final Year Project workload","MS-CIT exam/preparation","Personal reasons"];
+  const msg = `Select withdrawal reason:\n1. ${options[0]}\n2. ${options[1]}\n3. ${options[2]}\n4. ${options[3]}\n5. ${options[4]}\n\nType number (1-5) or write custom reason:`;
+  const input = prompt(msg, "3");
+  if(input === null) return null;
+  const t = input.trim();
+  if(!t) return null;
+  const n = Number(t);
+  if(Number.isInteger(n) && n >= 1 && n <= 5) return options[n - 1];
+  return t;
+}
+
+async function loadProfile(){
+  try{
+    const me = await api("/me");
+    const p = await api("/jobseeker/profile");
+
+    sName.value = me.name || "";
+    sEmail.value = me.email || "";
+    sName.readOnly = true;
+    sEmail.readOnly = true;
+
+    sPhone.value = p.phone || "";
+    sExperience.value = p.experience || "";
+    sSkills.value = p.skills || "";
+    sResume.value = p.resume_url || "";
+    uploadedResumeUrl = p.resume_url || "";
+    sSummary.value = p.summary || "";
+
+    profileStatus.textContent = `${calculateProfileCompletion(me, p)}%`;
+  }catch(err){
+    profileMsg.textContent = err.message;
+  }
+}
+
+async function uploadResumeFile(){
+  const fileInput = document.getElementById("sResumeFile");
+  const file = fileInput.files && fileInput.files[0];
+  if(!file){
+    resumeUploadMsg.textContent = "Please choose a resume file first.";
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("resume", file);
+
+  try{
+    const data = await api("/jobseeker/upload-resume", {
+      method:"POST",
+      body: formData,
+      noJson: true
+    });
+
+    uploadedResumeUrl = data.resume_url || "";
+    sResume.value = uploadedResumeUrl;
+    resumeUploadMsg.textContent = "Resume uploaded successfully.";
+  }catch(err){
+    resumeUploadMsg.textContent = err.message;
+  }
+}
+async function saveProfile(e){
+  e.preventDefault();
+  try{
+    await api("/jobseeker/profile", {
+      method:"PUT",
+      body:{
+        phone: sPhone.value.trim(),
+        experience: sExperience.value.trim(),
+        skills: sSkills.value.trim(),
+        resume_url: (uploadedResumeUrl || sResume.value.trim()),
+        summary: sSummary.value.trim(),
+        final_year_project: sSummary.value.includes("Final Year Project") ? "Yes" : null,
+        mscit: sSummary.value.toLowerCase().includes("ms-cit") ? "Yes" : null
+      }
+    });
+    profileMsg.textContent = "Profile saved successfully.";
+    await loadProfile();
+  }catch(err){
+    profileMsg.textContent = err.message;
+  }
+}
+
+async function loadJobs(){
+  jobsData = await api("/jobs");
+  availableJobsCount.textContent = jobsData.length;
+  renderJobs();
+}
+
+async function applyToJob(jobId){
+  try{
+    const canApply = await confirmProfileBeforeApply();
+    if(!canApply) return;
+
+    await api(`/jobs/${jobId}/apply`, { method:"POST" });
+    alert("Application submitted successfully.");
+    await loadApplications();
+  }catch(err){
+    alert(err.message);
+  }
+}
+
+async function loadApplications(){
+  applicationsData = await api("/jobseeker/applications");
+  myAppliedCount.textContent = applicationsData.length;
+  renderApplications();
+  renderRecentApplications();
+}
+
+async function withdrawApplication(id){
+  const reason = promptWithdrawalReason();
+  if(!reason) return;
+
+  try{
+    await api(`/applications/${id}/withdraw`, {
+      method:"PUT",
+      body:{ reason }
+    });
+    await loadApplications();
+  }catch(err){
+    alert(err.message);
+  }
+}
+
+function renderJobs(){
+  jobsList.innerHTML = "";
+  if(jobsData.length === 0){
+    jobsList.innerHTML = "<div class='item'><div class='item-meta'><b>No jobs available yet</b><span>Recruiters will post jobs soon.</span></div></div>";
+    return;
+  }
+
+  jobsData.forEach(j => {
+    jobsList.innerHTML += `
+      <div class="item">
+        <div class="item-meta">
+          <b>${j.title}</b>
+          <span>${j.company} | ${j.job_type || "N/A"}</span>
+          <span>Experience: ${j.experience || "N/A"} | Salary: ${j.salary || "N/A"}</span>
+          <span>${j.location || ""}</span>
+        </div>
+        <div class="actions">
+          <button class="action-btn apply" onclick="applyToJob(${j.id})">Apply</button>
+        </div>
+      </div>`;
+  });
+}
+
+function renderApplications(){
+  applicationsList.innerHTML = "";
+  if(applicationsData.length === 0){
+    applicationsList.innerHTML = "<div class='item'><div class='item-meta'><b>No applications yet</b><span>Apply to jobs from Browse Jobs section.</span></div></div>";
+    return;
+  }
+
+  applicationsData.forEach(a => {
+    const withdrawnInfo = a.status === "Withdrawn"
+      ? `<span>Reason: ${a.withdrawal_reason || "-"}</span>`
+      : "";
+
+    applicationsList.innerHTML += `
+      <div class="item">
+        <div class="item-meta">
+          <b>${a.title}</b>
+          <span>${a.company}</span>
+          <span>Status: ${a.status}</span>
+          <span>Applied: ${new Date(a.applied_at).toLocaleString()}</span>
+          ${withdrawnInfo}
+        </div>
+        <div class="actions">
+          ${a.status === "Applied" ? `<button class="action-btn delete" onclick="withdrawApplication(${a.id})">Withdraw</button>` : ""}
+        </div>
+      </div>`;
+  });
+}
+
+function renderRecentApplications(){
+  recentApplications.innerHTML = "";
+  const recents = applicationsData.slice(0, 3);
+
+  if(recents.length === 0){
+    recentApplications.innerHTML = "<div class='item'><div class='item-meta'><b>No recent applications</b><span>Your latest applications will appear here.</span></div></div>";
+    return;
+  }
+
+  recents.forEach(a => {
+    recentApplications.innerHTML += `
+      <div class="item">
+        <div class="item-meta">
+          <b>${a.title}</b>
+          <span>${a.company}</span>
+          <span>Status: ${a.status}</span>
+          <span>${new Date(a.applied_at).toLocaleString()}</span>
+        </div>
+      </div>`;
+  });
+}
+
+async function hydrate(){
+  try{
+    await loadProfile();
+    await loadJobs();
+    await loadApplications();
+  }catch(err){
+    console.error(err);
+  }
+}
+
+hydrate();
+
+function logout(){
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  window.location.href = "login.html";
+}
+</script>
+</body>
+</html>
+
+
+
+
+
+
+

@@ -1,54 +1,175 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>CareerConnect Portal</title>
+<title>CareerConnect Premium</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- AOS Animation Library -->
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<!-- Particles -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+<!-- AOS -->
 <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
 <style>
 
-/* Hero Animation */
-.hero {
-    background: linear-gradient(45deg,#0d6efd,#6610f2);
-    color:white;
-    padding:120px 0;
-    animation: fadeIn 2s;
+html{scroll-behavior:smooth;}
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:#0f2027;
+color:white;
+overflow-x:hidden;
 }
 
-@keyframes fadeIn {
-    from {opacity:0; transform:translateY(40px);}
-    to {opacity:1; transform:translateY(0);}
+/* Particle bg */
+#particles-js{
+position:fixed;
+width:100%;
+height:100%;
+z-index:-1;
 }
 
-/* Cards Animation */
-.category-card {
-    transition: 0.4s;
+/* NAVBAR */
+.navbar{
+position:fixed;
+width:100%;
+top:0;
+z-index:1000;
+background:rgba(0,0,0,0.4);
+backdrop-filter:blur(10px);
+transition:.4s;
 }
 
-.category-card:hover {
-    transform: translateY(-15px) scale(1.05);
-    box-shadow:0 8px 25px rgba(0,0,0,0.3);
+.navbar.scrolled{
+background:#000;
+box-shadow:0 6px 25px rgba(0,0,0,.8);
 }
 
-/* Button Animation */
-.btn-animate {
-    transition:0.3s;
+/* SECTIONS */
+section{
+padding:160px 0;
+position:relative;
 }
 
-.btn-animate:hover {
-    transform:scale(1.1);
+section::before{
+content:"";
+position:absolute;
+top:0;
+left:50%;
+transform:translateX(-50%);
+width:150px;
+height:3px;
+background:linear-gradient(90deg,transparent,#00ffcc,transparent);
 }
 
-/* Footer */
-footer {
-    background:#212529;
-    color:white;
-    padding:20px;
+/* HERO */
+.hero{
+padding-top:230px;
+text-align:center;
+}
+
+/* GLASS CARD */
+.glass-card{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(20px);
+border-radius:20px;
+padding:40px;
+transition:.4s;
+box-shadow:0 20px 40px rgba(0,0,0,.6);
+height:100%;
+}
+
+.glass-card:hover{
+transform:translateY(-12px) scale(1.06);
+box-shadow:0 0 25px rgba(0,255,204,.6);
+}
+
+/* PREMIUM BUTTON */
+.btn-premium{
+background:linear-gradient(45deg,#00ffcc,#00c6ff);
+border:none;
+color:black;
+padding:12px 32px;
+font-weight:bold;
+transition:.3s;
+}
+
+.btn-premium:hover{
+transform:scale(1.1);
+box-shadow:0 0 30px #00ffcc;
+}
+
+/* ===== NEW BUTTON STYLES ===== */
+
+/* Glass Login Button */
+.btn-glass{
+background:rgba(255,255,255,0.08);
+border:1px solid rgba(255,255,255,0.4);
+color:white;
+backdrop-filter:blur(10px);
+position:relative;
+overflow:hidden;
+transition:.3s;
+}
+
+.btn-glass:hover{
+background:rgba(255,255,255,0.2);
+box-shadow:0 0 15px rgba(255,255,255,0.5);
+}
+
+/* Glowing Register Button */
+.btn-glow{
+background:linear-gradient(45deg,#00ffcc,#00c6ff);
+color:black;
+font-weight:bold;
+border:none;
+position:relative;
+overflow:hidden;
+transition:.3s;
+}
+
+.btn-glow:hover{
+transform:scale(1.08);
+box-shadow:0 0 25px #00ffcc,
+0 0 40px #00c6ff;
+}
+
+/* Ripple Effect */
+.ripple span{
+position:absolute;
+border-radius:50%;
+transform:scale(0);
+animation:ripple 600ms linear;
+background:rgba(255,255,255,0.5);
+}
+
+@keyframes ripple{
+to{
+transform:scale(4);
+opacity:0;
+}
+}
+
+/* FOOTER */
+footer{
+background:rgba(0,0,0,0.85);
+padding:20px 0;
+text-align:center;
+}
+
+footer p{
+font-size:18px;
+font-weight:500;
+margin:0;
+color:#ffffff;
 }
 
 </style>
@@ -56,107 +177,159 @@ footer {
 
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+<div id="particles-js"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark navbar-expand-lg">
 <div class="container">
-<a class="navbar-brand fw-bold" href="#">CareerConnect</a>
+<a class="navbar-brand fw-bold">CareerConnect</a>
+
 <div>
-<a href="login.html" class="btn btn-outline-light me-2 btn-animate">Login</a>
-<a href="register.html" class="btn btn-warning btn-animate">Register</a>
+<a href="login.html" class="btn btn-glass ripple me-2">
+<i class="bi bi-box-arrow-in-right"></i> Login
+</a>
+
+<a href="register.html" class="btn btn-glow ripple">
+<i class="bi bi-person-plus-fill"></i> Register
+</a>
 </div>
+
 </div>
 </nav>
 
-<!-- Hero Section -->
-<section class="hero text-center">
+<!-- HERO -->
+<section class="hero">
 <div class="container">
 <h1 data-aos="fade-up">Find Your Dream Job Today</h1>
-<p class="lead" data-aos="fade-up" data-aos-delay="200">
+<p class="lead mt-4" data-aos="fade-up" data-aos-delay="200">
 Connecting Students & Recruiters Easily
 </p>
-<button class="btn btn-light btn-lg mt-3 btn-animate" data-aos="zoom-in">
+<a href="explore.html" class="btn btn-premium btn-lg mt-4">
 Explore Jobs
-</button>
+</a>
 </div>
 </section>
 
-<!-- About Section -->
-<section class="py-5 text-center">
-<div class="container" data-aos="fade-right">
-<h2>About Our Portal</h2>
-<p class="text-muted">
-CareerConnect helps job seekers find jobs and recruiters hire talent easily.
-Upload resumes, search jobs, and track applications.
-</p>
-</div>
-</section>
+<!-- ABOUT -->
+<section>
+<div class="container text-center">
+<h2 data-aos="fade-up">About CareerConnect</h2>
 
-<!-- Categories -->
-<section class="py-5 bg-light">
-<div class="container">
-<h2 class="text-center mb-5" data-aos="fade-up">Popular Categories</h2>
+<div class="row mt-5">
 
-<div class="row text-center">
-<div class="col-md-4">
-<div class="card p-4 category-card" data-aos="flip-left">
-<h4>💻 IT Jobs</h4>
-<p>Developer, Tester, Designer</p>
+<div class="col-md-4 mb-4">
+<div class="glass-card" data-aos="fade-right">
+<h4>🌐 Our Portal</h4>
+<p>Smart job portal connecting recruiters and job seekers efficiently.</p>
 </div>
 </div>
 
-<div class="col-md-4">
-<div class="card p-4 category-card" data-aos="flip-up">
-<h4>📊 Marketing</h4>
-<p>Digital Marketing, Sales</p>
+<div class="col-md-4 mb-4">
+<div class="glass-card" data-aos="fade-up">
+<h4>👨‍🎓 Job Seekers</h4>
+<p>Create profile, upload resume, track applications easily.</p>
 </div>
 </div>
 
-<div class="col-md-4">
-<div class="card p-4 category-card" data-aos="flip-right">
-<h4>💰 Finance</h4>
-<p>Accounts, Banking</p>
+<div class="col-md-4 mb-4">
+<div class="glass-card" data-aos="fade-left">
+<h4>🏢 Recruiters</h4>
+<p>Post jobs, manage candidates and hire faster.</p>
 </div>
 </div>
+
 </div>
 </div>
 </section>
 
-<!-- Features -->
-<section class="py-5 text-center">
-<div class="container">
+<!-- FEATURES -->
+<section>
+<div class="container text-center">
 <h2 data-aos="fade-up">Why Choose Us?</h2>
 
-<div class="row mt-4">
-<div class="col-md-4" data-aos="zoom-in">
+<div class="row mt-5">
+
+<div class="col-md-4 mb-4">
+<div class="glass-card" data-aos="zoom-in">
 <h5>⚡ Fast Hiring</h5>
-<p class="text-muted">Quick recruitment process.</p>
+<p>Quick recruitment process.</p>
+</div>
 </div>
 
-<div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+<div class="col-md-4 mb-4">
+<div class="glass-card" data-aos="zoom-in">
 <h5>🔒 Secure Platform</h5>
-<p class="text-muted">Data protection guaranteed.</p>
+<p>Safe data protection.</p>
+</div>
 </div>
 
-<div class="col-md-4" data-aos="zoom-in" data-aos-delay="400">
+<div class="col-md-4 mb-4">
+<div class="glass-card" data-aos="zoom-in">
 <h5>🌍 Global Access</h5>
-<p class="text-muted">Apply anywhere.</p>
+<p>Apply anywhere anytime.</p>
 </div>
+</div>
+
 </div>
 </div>
 </section>
 
-<!-- Footer -->
-<footer class="text-center">
+<!-- FOOTER -->
+<footer>
 <p>© 2026 CareerConnect Portal | Final Year Project</p>
 </footer>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- NAVBAR SCROLL -->
+<script>
+window.addEventListener("scroll",()=>{
+document.querySelector(".navbar")
+.classList.toggle("scrolled",window.scrollY>50);
+});
+</script>
 
-<!-- AOS Animation -->
+<!-- PARTICLES -->
+<script>
+particlesJS("particles-js",{
+particles:{
+number:{value:60},
+size:{value:3},
+color:{value:"#00ffcc"},
+line_linked:{enable:true,color:"#00ffcc"},
+move:{speed:2}
+}
+});
+</script>
+
+<!-- AOS -->
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script>
-AOS.init();
+AOS.init({
+duration:1200,
+once:false
+});
+</script>
+
+<!-- Ripple Effect -->
+<script>
+document.querySelectorAll(".ripple").forEach(btn=>{
+btn.addEventListener("click",function(e){
+
+const circle=document.createElement("span");
+const rect=this.getBoundingClientRect();
+
+circle.style.width=circle.style.height=
+Math.max(rect.width,rect.height)+"px";
+
+circle.style.left=e.clientX-rect.left-
+rect.width/2+"px";
+circle.style.top=e.clientY-rect.top-
+rect.height/2+"px";
+
+this.appendChild(circle);
+setTimeout(()=>circle.remove(),600);
+
+});
+});
 </script>
 
 </body>

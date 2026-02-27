@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Recruiter Dashboard - CareerConnect</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:#0f2027;
+color:white;
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:240px;
+height:100vh;
+background:rgba(0,0,0,0.7);
+padding:30px 20px;
+box-sizing:border-box;
+display:flex;
+flex-direction:column;
+}
+
+.sidebar h2{
+margin-bottom:30px;
+}
+
+.sidebar a{
+padding:12px;
+margin-bottom:10px;
+border-radius:10px;
+cursor:pointer;
+transition:.3s;
+}
+
+.sidebar a:hover{
+background:linear-gradient(45deg,#00ffcc,#00c6ff);
+color:black;
+}
+
+.logout{
+margin-top:auto;
+background:#dc3545;
+border:none;
+padding:10px;
+border-radius:20px;
+color:white;
+cursor:pointer;
+}
+
+/* MAIN */
+.main{
+flex:1;
+padding:40px;
+display:flex;
+justify-content:center;
+}
+
+.section{
+display:none;
+width:100%;
+max-width:700px;
+}
+
+.card{
+background:rgba(255,255,255,0.08);
+padding:25px;
+border-radius:20px;
+margin-bottom:25px;
+}
+
+input,select,textarea{
+width:100%;
+padding:10px;
+margin:10px 0;
+border:none;
+border-bottom:2px solid #aaa;
+background:transparent;
+color:rgb(184, 182, 182);
+}
+
+button{
+background:linear-gradient(45deg,#00ffcc,#00c6ff);
+border:none;
+padding:8px 18px;
+border-radius:20px;
+cursor:pointer;
+font-weight:bold;
+}
+
+img{
+margin-top:15px;
+max-width:120px;
+border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+<h2>CareerConnect</h2>
+
+<a onclick="showSection('dashboard')">Dashboard</a>
+<a onclick="showSection('post')">Post Job</a>
+<a onclick="showSection('jobs')">Posted Jobs</a>
+<a onclick="showSection('candidates')">Candidates</a>
+<a onclick="showSection('settings')">Settings</a>
+
+<button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<div class="main">
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="section">
+<div class="card">
+<h3>Dashboard Overview</h3>
+<p>Total Jobs Posted: <span id="jobCount">0</span></p>
+<p>Total Candidates Applied: <span id="candidateCount">3</span></p>
+</div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settings" class="section">
+<div class="card">
+<h3>Account Settings</h3>
+
+<form id="companyForm" enctype="multipart/form-data">
+
+<input type="text" id="companyName" placeholder="Company Name" required>
+
+<input type="email" id="recruiterEmail" placeholder="Recruiter Email" required>
+
+<input type="text" id="location" placeholder="Company Location" required>
+
+<label>Upload Company Logo (Max 10MB)</label>
+<input type="file" id="logo" accept="image/*">
+
+<button type="submit">Update</button>
+
+</form>
+
+<img id="logoPreview" style="display:none;">
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+/* ================= NAVIGATION ================= */
+
+function showSection(id){
+document.querySelectorAll(".section").forEach(sec=>{
+sec.style.display="none";
+});
+document.getElementById(id).style.display="block";
+}
+
+showSection("dashboard");
+
+/* ================= AUTH TOKEN ================= */
+
+const token = localStorage.getItem("token");
+
+if(!token){
+alert("Please login first");
+window.location.href="login.html";
+}
+
+/* ================= LOAD COMPANY SETTINGS ================= */
+
+function loadCompanyDetails(){
+
+fetch("http://localhost:5000/api/company-settings",{
+headers:{ Authorization:"Bearer "+token }
+})
+.then(res=>{
+if(!res.ok){
+throw new Error("Auth error or server error");
+}
+return res.json();
+})
+.then(data=>{
+document.getElementById("companyName").value=data.company_name||"";
+document.getElementById("recruiterEmail").value=data.recruiter_email||"";
+document.getElementById("location").value=data.location||"";
+
+if(data.logo){
+document.getElementById("logoPreview").src=
+"http://localhost:5000/uploads/"+data.logo;
+document.getElementById("logoPreview").style.display="block";
+}
+})
+.catch(err=>{
+console.log(err);
+alert("Session expired. Login again.");
+logout();
+});
+}
+
+/* ================= UPDATE SETTINGS ================= */
+
+document.getElementById("companyForm").addEventListener("submit",function(e){
+
+e.preventDefault();
+
+const formData=new FormData();
+formData.append("company_name",document.getElementById("companyName").value);
+formData.append("recruiter_email",document.getElementById("recruiterEmail").value);
+formData.append("location",document.getElementById("location").value);
+
+if(document.getElementById("logo").files[0]){
+formData.append("logo",document.getElementById("logo").files[0]);
+}
+
+fetch("http://localhost:5000/api/company-settings",{
+method:"POST",
+headers:{ Authorization:"Bearer "+token },
+body:formData
+})
+.then(res=>{
+if(!res.ok){
+throw new Error("Update failed");
+}
+return res.json();
+})
+.then(data=>{
+alert(data.message);
+loadCompanyDetails();
+})
+.catch(err=>{
+console.log(err);
+alert("Update failed");
+});
+
+});
+
+loadCompanyDetails();
+
+/* ================= LOGOUT ================= */
+
+function logout(){
+localStorage.removeItem("token");
+window.location.href="login.html";
+}
+
+</script>
+
+</body>
+</html>
