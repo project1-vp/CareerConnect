@@ -1,8 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <title>Recruiter Dashboard - CareerConnect</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="ui-premium.css">
+<script src="ui-premium.js" defer></script>
 
 <style>
 body{
@@ -153,6 +155,37 @@ border-radius:10px;
 
 <script>
 
+function showToast(message, options = {}){
+const { type = "default", icon: iconSymbol, style = {}, duration = 4500 } = options;
+const rootId = "cc-toast-root";
+let root = document.getElementById(rootId);
+if(!root){
+root = document.createElement("div");
+root.id = rootId;
+Object.assign(root.style,{position:"fixed",top:"18px",left:"50%",transform:"translateX(-50%)",zIndex:"9999",width:"min(380px, calc(100vw - 24px))",pointerEvents:"none"});
+document.body.appendChild(root);
+}
+const toastCard = document.createElement("div");
+const isSuccess = type === "success";
+const isError = type === "error";
+const background = style.background || (isSuccess ? "linear-gradient(135deg, rgba(16,185,129,0.96), rgba(14,165,233,0.96))" : isError ? "linear-gradient(135deg, rgba(249,115,22,0.96), rgba(244,63,94,0.96))" : "linear-gradient(135deg, rgba(51,65,85,0.96), rgba(30,41,59,0.96))");
+Object.assign(toastCard.style,{padding:"9px 12px",borderRadius:"12px",color:style.color || "#fff",background,border:"1px solid rgba(255,255,255,0.16)",backdropFilter:"blur(10px)",boxShadow:"0 12px 28px rgba(0,0,0,.33)",fontSize:"13px",fontWeight:"600",lineHeight:"1.35",display:"flex",alignItems:"center",gap:"8px",opacity:"0",transform:"translateY(-14px) scale(.98)",transition:"opacity .24s ease, transform .24s ease"});
+Object.assign(toastCard.style, style);
+const iconEl = document.createElement("span");
+iconEl.textContent = iconSymbol || (isSuccess ? "OK" : isError ? "!" : "i");
+Object.assign(iconEl.style,{width:"18px",height:"18px",borderRadius:"999px",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:"800",color:"#fff",background:"rgba(0,0,0,0.22)"});
+const msg = document.createElement("span");
+msg.textContent = message || "Something went wrong";
+toastCard.append(iconEl, msg);
+root.replaceChildren(toastCard);
+clearTimeout(root._toastTimer);
+requestAnimationFrame(() => { toastCard.style.opacity = "1"; toastCard.style.transform = "translateY(0) scale(1)"; });
+root._toastTimer = setTimeout(() => { toastCard.style.opacity = "0"; toastCard.style.transform = "translateY(-12px) scale(.98)"; setTimeout(() => root.replaceChildren(), 260); }, duration);
+}
+function toast(message, options = {}){ showToast(message, options); }
+toast.success = (message, options = {}) => showToast(message, { ...options, type:"success" });
+toast.error = (message, options = {}) => showToast(message, { ...options, type:"error" });
+
 /* ================= NAVIGATION ================= */
 
 function showSection(id){
@@ -169,15 +202,15 @@ showSection("dashboard");
 const token = localStorage.getItem("token");
 
 if(!token){
-alert("Please login first");
-window.location.href="login.html";
+toast.error("Please login first.");
+(window.smoothNavigate ? smoothNavigate("login.html") : (window.location.href="login.html"));
 }
 
 /* ================= LOAD COMPANY SETTINGS ================= */
 
 function loadCompanyDetails(){
 
-fetch("http://localhost:5000/api/company-settings",{
+fetch("http://localhost:4000/api/company-settings",{
 headers:{ Authorization:"Bearer "+token }
 })
 .then(res=>{
@@ -193,13 +226,13 @@ document.getElementById("location").value=data.location||"";
 
 if(data.logo){
 document.getElementById("logoPreview").src=
-"http://localhost:5000/uploads/"+data.logo;
+"http://localhost:4000/uploads/"+data.logo;
 document.getElementById("logoPreview").style.display="block";
 }
 })
 .catch(err=>{
 console.log(err);
-alert("Session expired. Login again.");
+toast.error("Session expired. Login again.");
 logout();
 });
 }
@@ -219,7 +252,7 @@ if(document.getElementById("logo").files[0]){
 formData.append("logo",document.getElementById("logo").files[0]);
 }
 
-fetch("http://localhost:5000/api/company-settings",{
+fetch("http://localhost:4000/api/company-settings",{
 method:"POST",
 headers:{ Authorization:"Bearer "+token },
 body:formData
@@ -231,12 +264,12 @@ throw new Error("Update failed");
 return res.json();
 })
 .then(data=>{
-alert(data.message);
+toast.success(data.message || "Updated successfully.");
 loadCompanyDetails();
 })
 .catch(err=>{
 console.log(err);
-alert("Update failed");
+toast.error("Update failed.");
 });
 
 });
@@ -247,10 +280,11 @@ loadCompanyDetails();
 
 function logout(){
 localStorage.removeItem("token");
-window.location.href="login.html";
+(window.smoothNavigate ? smoothNavigate("login.html") : (window.location.href="login.html"));
 }
 
 </script>
 
 </body>
 </html>
+

@@ -1,172 +1,103 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Explore Jobs - CareerConnect</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!-- Bootstrap -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+<title>CareerConnect | Explore Jobs</title>
+<link rel="stylesheet" href="ui-premium.css">
+<script src="ui-premium.js" defer></script>
 <style>
-
-body{
-margin:0;
-font-family:'Segoe UI',sans-serif;
-background:#0f2027;
-color:white;
+.page{max-width:1180px;margin:0 auto;padding:0 20px;}
+.top{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.84);backdrop-filter:blur(12px);border-bottom:1px solid var(--prem-line);} 
+.top .inner{height:70px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:1.2rem;}
+.link-btn{padding:9px 14px;border-radius:999px;border:1px solid var(--prem-line);text-decoration:none;color:var(--prem-text);font-weight:600;background:rgba(255,255,255,.75);} 
+.link-btn.main{background:linear-gradient(120deg,var(--prem-accent),var(--prem-accent2));color:#fff;border:0;}
+.head{padding:34px 0 18px;}
+.head h1{margin:0;color:#14304e;}
+.head p{margin:8px 0 0;color:var(--prem-muted);} 
+.layout{display:grid;grid-template-columns:300px 1fr;gap:16px;padding-bottom:28px;}
+.panel,.results{background:var(--prem-card);border:1px solid var(--prem-line);border-radius:16px;box-shadow:0 10px 22px rgba(18,36,58,.1);} 
+.panel{padding:16px;position:sticky;top:90px;height:fit-content;}
+.panel h3{margin:0 0 12px;color:#17395d;font-size:1rem;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:.85rem;color:var(--prem-muted);margin-bottom:6px;}
+.field input,.field select{width:100%;padding:10px;border-radius:10px;border:1px solid var(--prem-line);background:#fff;color:#17395d;outline:none;}
+.field input:focus,.field select:focus{border-color:var(--prem-accent);box-shadow:0 0 0 3px rgba(59,130,246,.15);} 
+.results{padding:14px;}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.job{background:#fff;border:1px solid var(--prem-line);border-radius:14px;padding:14px;display:grid;gap:8px;}
+.job h3{margin:0;color:#17395d;font-size:1rem;}
+.meta{display:flex;gap:8px;flex-wrap:wrap;}
+.badge{font-size:.78rem;padding:5px 9px;border-radius:999px;background:rgba(59,130,246,.12);color:#1f4f7f;border:1px solid rgba(59,130,246,.2);} 
+.job p{margin:0;color:var(--prem-muted);font-size:.9rem;}
+.cta-row{display:flex;justify-content:space-between;align-items:center;margin-top:4px;}
+.apply{padding:8px 12px;border:0;border-radius:999px;background:linear-gradient(120deg,var(--prem-accent),var(--prem-accent2));color:#fff;font-weight:600;cursor:pointer;}
+.match{font-size:.82rem;color:#1f4f7f;font-weight:600;}
+@media (max-width:980px){
+  .layout{grid-template-columns:1fr;}
+  .panel{position:static;}
+  .cards{grid-template-columns:1fr;}
 }
-
-/* Navbar */
-.navbar{
-background:rgba(0,0,0,0.7);
-backdrop-filter:blur(10px);
-}
-
-/* Section */
-section{
-padding:120px 0;
-}
-
-/* Job Card */
-.job-card{
-background:rgba(255,255,255,0.08);
-border-radius:20px;
-padding:25px;
-backdrop-filter:blur(20px);
-transition:.4s;
-box-shadow:0 10px 30px rgba(0,0,0,.6);
-height:100%;
-animation:fadeUp .8s ease;
-}
-
-.job-card:hover{
-transform:translateY(-10px) scale(1.04);
-box-shadow:0 0 25px rgba(0,255,204,.6);
-}
-
-/* Logo */
-.company-logo{
-width:70px;
-height:70px;
-border-radius:12px;
-object-fit:cover;
-margin-bottom:15px;
-}
-
-/* Button */
-.btn-premium{
-background:linear-gradient(45deg,#00ffcc,#00c6ff);
-border:none;
-color:black;
-font-weight:bold;
-}
-
-/* Animation */
-@keyframes fadeUp{
-from{opacity:0; transform:translateY(40px);}
-to{opacity:1; transform:translateY(0);}
-}
-
 </style>
 </head>
-
 <body>
+<header class="top">
+  <div class="page inner">
+    <div class="brand">CareerConnect</div>
+    <div style="display:flex;gap:8px;">
+      <a class="link-btn" href="home.html">Home</a>
+      <a class="link-btn" href="login.html">Login</a>
+      <a class="link-btn main" href="register.html">Register</a>
+    </div>
+  </div>
+</header>
 
-<!-- Navbar -->
-<nav class="navbar navbar-dark navbar-expand-lg fixed-top">
-<div class="container">
-<a class="navbar-brand fw-bold" href="index.html">CareerConnect</a>
-</div>
-</nav>
+<main class="page">
+  <section class="head">
+    <h1>Explore Opportunities</h1>
+    <p>Discover startup and enterprise roles curated by skills, experience, and location.</p>
+  </section>
 
-<section>
-<div class="container">
+  <section class="layout">
+    <aside class="panel">
+      <h3>Filters</h3>
+      <div class="field"><label>Role</label><input type="text" placeholder="Frontend, Backend, QA"></div>
+      <div class="field"><label>Location</label><input type="text" placeholder="Remote, Pune, Bangalore"></div>
+      <div class="field"><label>Experience</label><select><option>Any</option><option>0-1 years</option><option>1-3 years</option><option>3+ years</option></select></div>
+      <div class="field"><label>Type</label><select><option>Any</option><option>Full Time</option><option>Internship</option><option>Contract</option></select></div>
+      <button class="apply" style="width:100%;">Apply Filters</button>
+    </aside>
 
-<h2 class="text-center mb-5">Explore Jobs</h2>
-
-<div class="row g-4">
-
-<!-- Job 1 -->
-<div class="col-md-4">
-<div class="job-card text-center">
-<img src="https://logo.clearbit.com/google.com" class="company-logo">
-<h4>Frontend Developer</h4>
-<p>Company: Google</p>
-<p>Location: Bangalore</p>
-<p>Salary: ₹8–12 LPA</p>
-<p>Contract: Full Time</p>
-<button class="btn btn-premium">Apply Now</button>
-</div>
-</div>
-
-<!-- Job 2 -->
-<div class="col-md-4">
-<div class="job-card text-center">
-<img src="https://logo.clearbit.com/amazon.com" class="company-logo">
-<h4>Cloud Engineer</h4>
-<p>Company: Amazon</p>
-<p>Location: Hyderabad</p>
-<p>Salary: ₹10–15 LPA</p>
-<p>Contract: Full Time</p>
-<button class="btn btn-premium">Apply Now</button>
-</div>
-</div>
-
-<!-- Job 3 -->
-<div class="col-md-4">
-<div class="job-card text-center">
-<img src="https://logo.clearbit.com/tcs.com" class="company-logo">
-<h4>Software Developer</h4>
-<p>Company: TCS</p>
-<p>Location: Ahmedabad</p>
-<p>Salary: ₹4–7 LPA</p>
-<p>Contract: Permanent</p>
-<button class="btn btn-premium">Apply Now</button>
-</div>
-</div>
-
-<!-- Job 4 -->
-<div class="col-md-4">
-<div class="job-card text-center">
-<img src="https://logo.clearbit.com/infosys.com" class="company-logo">
-<h4>Data Analyst</h4>
-<p>Company: Infosys</p>
-<p>Location: Pune</p>
-<p>Salary: ₹5–9 LPA</p>
-<p>Contract: Full Time</p>
-<button class="btn btn-premium">Apply Now</button>
-</div>
-</div>
-
-<!-- Job 5 -->
-<div class="col-md-4">
-<div class="job-card text-center">
-<img src="https://logo.clearbit.com/wipro.com" class="company-logo">
-<h4>Backend Developer</h4>
-<p>Company: Wipro</p>
-<p>Location: Mumbai</p>
-<p>Salary: ₹6–10 LPA</p>
-<p>Contract: Contract</p>
-<button class="btn btn-premium">Apply Now</button>
-</div>
-</div>
-
-<!-- Job 6 -->
-<div class="col-md-4">
-<div class="job-card text-center">
-<img src="https://logo.clearbit.com/microsoft.com" class="company-logo">
-<h4>Full Stack Developer</h4>
-<p>Company: Microsoft</p>
-<p>Location: Noida</p>
-<p>Salary: ₹12–18 LPA</p>
-<p>Contract: Full Time</p>
-<button class="btn btn-premium">Apply Now</button>
-</div>
-</div>
-
-</div>
-</div>
-</section>
-
+    <div class="results">
+      <div class="cards">
+        <article class="job">
+          <h3>Frontend Developer</h3>
+          <div class="meta"><span class="badge">React</span><span class="badge">Full Time</span><span class="badge">Bangalore</span></div>
+          <p>Build responsive UI systems for high-growth product teams.</p>
+          <div class="cta-row"><span class="match">Match: 92%</span><button class="apply">Apply Now</button></div>
+        </article>
+        <article class="job">
+          <h3>Backend Engineer</h3>
+          <div class="meta"><span class="badge">Node.js</span><span class="badge">Hybrid</span><span class="badge">Pune</span></div>
+          <p>Design APIs and services powering recruitment workflows at scale.</p>
+          <div class="cta-row"><span class="match">Match: 88%</span><button class="apply">Apply Now</button></div>
+        </article>
+        <article class="job">
+          <h3>Data Analyst</h3>
+          <div class="meta"><span class="badge">SQL</span><span class="badge">Full Time</span><span class="badge">Remote</span></div>
+          <p>Analyze hiring funnel metrics and deliver actionable insights.</p>
+          <div class="cta-row"><span class="match">Match: 84%</span><button class="apply">Apply Now</button></div>
+        </article>
+        <article class="job">
+          <h3>QA Automation Engineer</h3>
+          <div class="meta"><span class="badge">Cypress</span><span class="badge">Contract</span><span class="badge">Noida</span></div>
+          <p>Own test strategy and automation for quality-first releases.</p>
+          <div class="cta-row"><span class="match">Match: 81%</span><button class="apply">Apply Now</button></div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
 </body>
 </html>

@@ -1,8 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <title>Recruiter Dashboard - CareerConnect</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="ui-premium.css">
+<script src="ui-premium.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <style>
 :root{
@@ -243,26 +245,6 @@ p{color:var(--muted);}
         <span class="badge" id="profileStatus">0%</span>
       </div>
 
-      <div class="sub-title">Add Candidate</div>
-      <form id="candidateForm" onsubmit="saveCandidate(event)">
-        <div class="grid three">
-          <div class="input-box">
-            <label for="cName">Candidate Name</label>
-            <input id="cName" type="text" required>
-          </div>
-          <div class="input-box">
-            <label for="cExperience">Experience</label>
-            <input id="cExperience" type="text" required>
-          </div>
-          <div class="input-box">
-            <label for="cResume">Resume URL</label>
-            <input id="cResume" type="url" required>
-          </div>
-        </div>
-        <button class="primary" type="submit">Save Candidate</button>
-        <div class="status" id="candidateMsg"></div>
-      </form>
-
       <div class="sub-title">Candidate Details</div>
       <div id="candidateList" class="list"></div>
 
@@ -289,6 +271,7 @@ p{color:var(--muted);}
             <label for="jobType">Job Type</label>
             <select id="jobType" required>
               <option value="">Select</option>
+              <option>IT</option>
               <option>Full-Time</option>
               <option>Part-Time</option>
               <option>Internship</option>
@@ -372,14 +355,45 @@ p{color:var(--muted);}
 <script>
 particlesJS("particles-js",{ particles:{ number:{value:60}, size:{value:3}, color:{value:"#00ffcc"}, move:{speed:2} } });
 
-const API_BASE = "http://localhost:5000/api";
+function showToast(message, options = {}){
+  const { type = "default", icon: iconSymbol, style = {}, duration = 4500 } = options;
+  const rootId = "cc-toast-root";
+  let root = document.getElementById(rootId);
+  if(!root){
+    root = document.createElement("div");
+    root.id = rootId;
+    Object.assign(root.style,{position:"fixed",top:"18px",left:"50%",transform:"translateX(-50%)",zIndex:"9999",width:"min(380px, calc(100vw - 24px))",pointerEvents:"none"});
+    document.body.appendChild(root);
+  }
+  const toastCard = document.createElement("div");
+  const isSuccess = type === "success";
+  const isError = type === "error";
+  const background = style.background || (isSuccess ? "linear-gradient(135deg, rgba(16,185,129,0.96), rgba(14,165,233,0.96))" : isError ? "linear-gradient(135deg, rgba(249,115,22,0.96), rgba(244,63,94,0.96))" : "linear-gradient(135deg, rgba(51,65,85,0.96), rgba(30,41,59,0.96))");
+  Object.assign(toastCard.style,{padding:"9px 12px",borderRadius:"12px",color:style.color || "#fff",background,border:"1px solid rgba(255,255,255,0.16)",backdropFilter:"blur(10px)",boxShadow:"0 12px 28px rgba(0,0,0,.33)",fontSize:"13px",fontWeight:"600",lineHeight:"1.35",display:"flex",alignItems:"center",gap:"8px",opacity:"0",transform:"translateY(-14px) scale(.98)",transition:"opacity .24s ease, transform .24s ease"});
+  Object.assign(toastCard.style, style);
+  const iconEl = document.createElement("span");
+  iconEl.textContent = iconSymbol || (isSuccess ? "OK" : isError ? "!" : "i");
+  Object.assign(iconEl.style,{width:"18px",height:"18px",borderRadius:"999px",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:"800",color:"#fff",background:"rgba(0,0,0,0.22)"});
+  const msg = document.createElement("span");
+  msg.textContent = message || "Something went wrong";
+  toastCard.append(iconEl, msg);
+  root.replaceChildren(toastCard);
+  clearTimeout(root._toastTimer);
+  requestAnimationFrame(() => { toastCard.style.opacity = "1"; toastCard.style.transform = "translateY(0) scale(1)"; });
+  root._toastTimer = setTimeout(() => { toastCard.style.opacity = "0"; toastCard.style.transform = "translateY(-12px) scale(.98)"; setTimeout(() => root.replaceChildren(), 260); }, duration);
+}
+function toast(message, options = {}){ showToast(message, options); }
+toast.success = (message, options = {}) => showToast(message, { ...options, type: "success" });
+toast.error = (message, options = {}) => showToast(message, { ...options, type: "error" });
+
+const API_BASE = "http://localhost:4000/api";
 const token = localStorage.getItem("token");
 const role = (localStorage.getItem("role") || "").toLowerCase();
 let recruiterJobs = [];
 
 if(!token || role !== "recruiter"){
-  alert("Recruiter access only");
-  window.location.href = "login.html";
+  toast.error("Recruiter access only.");
+  (window.smoothNavigate ? smoothNavigate("login.html") : (window.location.href = "login.html"));
 }
 
 function showSection(id, button){
@@ -551,7 +565,7 @@ async function editJob(id){
     await loadJobs();
     await loadCandidates();
   }catch(err){
-    alert(err.message);
+    toast.error(err.message);
   }
 }
 
@@ -562,7 +576,7 @@ async function deleteJob(id){
     await loadJobs();
     await loadCandidates();
   }catch(err){
-    alert(err.message);
+    toast.error(err.message);
   }
 }
 
@@ -600,19 +614,52 @@ async function loadCandidates(){
           <span>Status: ${c.status || "Applied"}</span>
         </div>
         <div class="actions">
-          ${c.resume_url ? `<a class="action-btn view" href="${c.resume_url}" target="_blank" rel="noopener noreferrer">Preview Resume</a><a class="action-btn edit" href="${c.resume_url}" download>Download Resume</a>` : "<span class='action-btn delete' style='cursor:default;'>No Resume</span>"}
+          ${c.resume_url ? `<button class="action-btn view" onclick="previewCandidateResume(${c.seeker_id})">Preview Resume</button><button class="action-btn edit" onclick="downloadCandidateResume(${c.seeker_id}, '${(c.name || "candidate").replace(/'/g, "\\'")}')">Download Resume</button>` : "<span class='action-btn delete' style='cursor:default;'>No Resume</span>"}
         </div>
       </div>`;
   });
 }
 
-function saveCandidate(e){
-  e.preventDefault();
-  candidateMsg.textContent = "Candidate list is auto-generated from job applications.";
+async function previewCandidateResume(seekerId){
+  try{
+    const res = await fetch(`${API_BASE}/recruiter/candidates/${seekerId}/resume`, {
+      headers:{ Authorization:`Bearer ${token}` }
+    });
+    if(!res.ok){
+      const d = await res.json().catch(() => ({}));
+      throw new Error(d.message || "Preview failed");
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank", "noopener,noreferrer");
+    setTimeout(() => URL.revokeObjectURL(url), 20000);
+  }catch(err){
+    toast.error(err.message || "Preview failed");
+  }
 }
 
-function editCandidate(){ alert("Candidates are managed by job seeker applications."); }
-function deleteCandidate(){ alert("Candidates are managed by job seeker applications."); }
+async function downloadCandidateResume(seekerId, candidateName){
+  try{
+    const res = await fetch(`${API_BASE}/recruiter/candidates/${seekerId}/resume?download=1`, {
+      headers:{ Authorization:`Bearer ${token}` }
+    });
+    if(!res.ok){
+      const d = await res.json().catch(() => ({}));
+      throw new Error(d.message || "Download failed");
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${(candidateName || "resume").replace(/[^a-zA-Z0-9._-]/g, "_")}_resume`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 20000);
+  }catch(err){
+    toast.error(err.message || "Download failed");
+  }
+}
 
 async function hydrate(){
   try{
@@ -629,11 +676,12 @@ hydrate();
 function logout(){
   localStorage.removeItem("token");
   localStorage.removeItem("role");
-  window.location.href = "login.html";
+  (window.smoothNavigate ? smoothNavigate("login.html") : (window.location.href = "login.html"));
 }
 </script>
 </body>
 </html>
+
 
 
 
