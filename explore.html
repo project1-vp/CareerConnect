@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,36 +8,60 @@
 <script src="ui-premium.js" defer></script>
 <style>
 .page{max-width:1180px;margin:0 auto;padding:0 20px;}
-.top{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.84);backdrop-filter:blur(12px);border-bottom:1px solid var(--prem-line);} 
+.top{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.84);backdrop-filter:blur(12px);border-bottom:1px solid var(--prem-line);}
 .top .inner{height:70px;display:flex;align-items:center;justify-content:space-between;}
 .brand{font-weight:700;font-size:1.2rem;}
-.link-btn{padding:9px 14px;border-radius:999px;border:1px solid var(--prem-line);text-decoration:none;color:var(--prem-text);font-weight:600;background:rgba(255,255,255,.75);} 
+.link-btn{padding:9px 14px;border-radius:999px;border:1px solid var(--prem-line);text-decoration:none;color:var(--prem-text);font-weight:600;background:rgba(255,255,255,.75);}
 .link-btn.main{background:linear-gradient(120deg,var(--prem-accent),var(--prem-accent2));color:#fff;border:0;}
 .head{padding:34px 0 18px;}
-.head h1{margin:0;color:#14304e;}
-.head p{margin:8px 0 0;color:var(--prem-muted);} 
+.head h1{margin:0;color:#14304e;font-size:clamp(2rem,4vw,2.8rem);}
+.head p{margin:8px 0 0;color:var(--prem-muted);font-size:1rem;}
 .layout{display:grid;grid-template-columns:300px 1fr;gap:16px;padding-bottom:28px;}
-.panel,.results{background:var(--prem-card);border:1px solid var(--prem-line);border-radius:16px;box-shadow:0 10px 22px rgba(18,36,58,.1);} 
-.panel{padding:16px;position:sticky;top:90px;height:fit-content;}
-.panel h3{margin:0 0 12px;color:#17395d;font-size:1rem;}
-.field{margin-bottom:12px;}
-.field label{display:block;font-size:.85rem;color:var(--prem-muted);margin-bottom:6px;}
-.field input,.field select{width:100%;padding:10px;border-radius:10px;border:1px solid var(--prem-line);background:#fff;color:#17395d;outline:none;}
-.field input:focus,.field select:focus{border-color:var(--prem-accent);box-shadow:0 0 0 3px rgba(59,130,246,.15);} 
-.results{padding:14px;}
-.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
-.job{background:#fff;border:1px solid var(--prem-line);border-radius:14px;padding:14px;display:grid;gap:8px;}
-.job h3{margin:0;color:#17395d;font-size:1rem;}
-.meta{display:flex;gap:8px;flex-wrap:wrap;}
-.badge{font-size:.78rem;padding:5px 9px;border-radius:999px;background:rgba(59,130,246,.12);color:#1f4f7f;border:1px solid rgba(59,130,246,.2);} 
-.job p{margin:0;color:var(--prem-muted);font-size:.9rem;}
-.cta-row{display:flex;justify-content:space-between;align-items:center;margin-top:4px;}
-.apply{padding:8px 12px;border:0;border-radius:999px;background:linear-gradient(120deg,var(--prem-accent),var(--prem-accent2));color:#fff;font-weight:600;cursor:pointer;}
-.match{font-size:.82rem;color:#1f4f7f;font-weight:600;}
+.panel,.results{background:var(--prem-card);border:1px solid var(--prem-line);border-radius:20px;box-shadow:0 10px 22px rgba(18,36,58,.1);}
+.panel{padding:20px;position:sticky;top:90px;height:fit-content;}
+.panel h3{margin:0 0 14px;color:#17395d;font-size:1.05rem;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:.85rem;color:var(--prem-muted);margin-bottom:8px;}
+.field input,.field select{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--prem-line);background:#fff;color:#17395d;outline:none;font-size:1rem;}
+.field input:focus,.field select:focus{border-color:var(--prem-accent);box-shadow:0 0 0 3px rgba(59,130,246,.15);}
+.results{padding:16px;}
+.toolbar{display:grid;grid-template-columns:minmax(280px,1fr) 200px auto;align-items:center;gap:12px;margin-bottom:12px;padding:0 4px;}
+.search-box{flex:1 1 320px;max-width:460px;}
+.search-box input{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--prem-line);background:#fff;color:#17395d;outline:none;font-size:1rem;}
+.search-box input:focus{border-color:var(--prem-accent);box-shadow:0 0 0 3px rgba(59,130,246,.15);}
+.sort-box select{padding:13px 14px;border-radius:14px;border:1px solid var(--prem-line);background:#fff;color:#17395d;outline:none;font-size:1rem;min-width:160px;}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:0 4px 14px;}
+.status-text{font-size:.92rem;color:var(--prem-muted);}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.job{background:#fff;border:1px solid var(--prem-line);border-radius:20px;padding:16px 18px;display:grid;gap:10px;min-height:210px;}
+.job h3{margin:0;color:#17395d;font-size:1.05rem;}
+.meta{display:flex;gap:10px;flex-wrap:wrap;}
+.badge{font-size:.78rem;padding:8px 12px;border-radius:999px;background:rgba(59,130,246,.12);color:#1f4f7f;border:1px solid rgba(59,130,246,.2);}
+.job p{margin:0;color:var(--prem-muted);font-size:.95rem;line-height:1.45;}
+.cta-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;}
+.cta-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.ghost-btn{padding:10px 14px;border-radius:999px;border:1px solid var(--prem-line);background:#fff;color:#17395d;font-weight:600;cursor:pointer;}
+.apply{padding:10px 16px;border:0;border-radius:999px;background:linear-gradient(120deg,var(--prem-accent),var(--prem-accent2));color:#fff;font-weight:600;cursor:pointer;transition:transform .18s ease,opacity .18s ease;}
+.apply:hover{transform:translateY(-1px);}
+.apply:disabled{opacity:.65;cursor:not-allowed;transform:none;}
+.match{font-size:.88rem;color:#1f4f7f;font-weight:600;}
+.muted{color:var(--prem-muted);}
+.empty{padding:36px 20px;text-align:center;color:var(--prem-muted);background:#fff;border:1px dashed var(--prem-line);border-radius:18px;}
+.modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:1500;}
+.modal-backdrop.open{display:flex;}
+.modal{width:min(760px,100%);max-height:85vh;overflow:auto;background:#fff;border:1px solid var(--prem-line);border-radius:24px;box-shadow:0 24px 60px rgba(15,23,42,.2);padding:22px;}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;}
+.modal-head h2{margin:0;color:#17395d;font-size:1.45rem;}
+.modal-close{border:1px solid var(--prem-line);background:#fff;border-radius:999px;width:38px;height:38px;cursor:pointer;font-size:1.2rem;color:#17395d;}
+.modal-grid{display:grid;gap:14px;}
+.detail-block{padding:14px 16px;border:1px solid var(--prem-line);border-radius:16px;background:#fdfefe;}
+.detail-label{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--prem-muted);margin-bottom:6px;}
+.detail-value{color:#17395d;line-height:1.6;}
 @media (max-width:980px){
   .layout{grid-template-columns:1fr;}
   .panel{position:static;}
   .cards{grid-template-columns:1fr;}
+  .toolbar{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -62,42 +86,387 @@
   <section class="layout">
     <aside class="panel">
       <h3>Filters</h3>
-      <div class="field"><label>Role</label><input type="text" placeholder="Frontend, Backend, QA"></div>
-      <div class="field"><label>Location</label><input type="text" placeholder="Remote, Pune, Bangalore"></div>
-      <div class="field"><label>Experience</label><select><option>Any</option><option>0-1 years</option><option>1-3 years</option><option>3+ years</option></select></div>
-      <div class="field"><label>Type</label><select><option>Any</option><option>Full Time</option><option>Internship</option><option>Contract</option></select></div>
-      <button class="apply" style="width:100%;">Apply Filters</button>
+      <div class="field">
+        <label for="roleFilter">Role</label>
+        <input id="roleFilter" type="text" placeholder="Frontend, Backend, QA">
+      </div>
+      <div class="field">
+        <label for="locationFilter">Location</label>
+        <input id="locationFilter" type="text" placeholder="Remote, Pune, Bangalore">
+      </div>
+      <div class="field">
+        <label for="experienceFilter">Experience</label>
+        <select id="experienceFilter">
+          <option value="Any">Any</option>
+          <option value="0-1">0-1 years</option>
+          <option value="1-3">1-3 years</option>
+          <option value="3+">3+ years</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="typeFilter">Type</label>
+        <select id="typeFilter">
+          <option value="Any">Any</option>
+          <option value="Full Time">Full Time</option>
+          <option value="Internship">Internship</option>
+          <option value="Contract">Contract</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="modeFilter">Mode</label>
+        <select id="modeFilter">
+          <option value="Any">Any</option>
+          <option value="Offline">Offline</option>
+          <option value="Hybrid">Hybrid</option>
+          <option value="Work From Home">Work From Home</option>
+          <option value="Remote">Remote</option>
+        </select>
+      </div>
+      <button id="applyFiltersBtn" class="apply" style="width:100%;">Apply Filters</button>
     </aside>
 
     <div class="results">
-      <div class="cards">
-        <article class="job">
-          <h3>Frontend Developer</h3>
-          <div class="meta"><span class="badge">React</span><span class="badge">Full Time</span><span class="badge">Bangalore</span></div>
-          <p>Build responsive UI systems for high-growth product teams.</p>
-          <div class="cta-row"><span class="match">Match: 92%</span><button class="apply">Apply Now</button></div>
-        </article>
-        <article class="job">
-          <h3>Backend Engineer</h3>
-          <div class="meta"><span class="badge">Node.js</span><span class="badge">Hybrid</span><span class="badge">Pune</span></div>
-          <p>Design APIs and services powering recruitment workflows at scale.</p>
-          <div class="cta-row"><span class="match">Match: 88%</span><button class="apply">Apply Now</button></div>
-        </article>
-        <article class="job">
-          <h3>Data Analyst</h3>
-          <div class="meta"><span class="badge">SQL</span><span class="badge">Full Time</span><span class="badge">Remote</span></div>
-          <p>Analyze hiring funnel metrics and deliver actionable insights.</p>
-          <div class="cta-row"><span class="match">Match: 84%</span><button class="apply">Apply Now</button></div>
-        </article>
-        <article class="job">
-          <h3>QA Automation Engineer</h3>
-          <div class="meta"><span class="badge">Cypress</span><span class="badge">Contract</span><span class="badge">Noida</span></div>
-          <p>Own test strategy and automation for quality-first releases.</p>
-          <div class="cta-row"><span class="match">Match: 81%</span><button class="apply">Apply Now</button></div>
-        </article>
+      <div class="toolbar">
+        <div class="search-box">
+          <input id="searchFilter" type="text" placeholder="Search by title, company, skill, or keyword">
+        </div>
+        <div class="sort-box">
+          <select id="sortFilter">
+            <option value="latest">Latest</option>
+            <option value="oldest">Oldest</option>
+            <option value="company">Company</option>
+            <option value="location">Location</option>
+            <option value="match">Best Match</option>
+          </select>
+        </div>
+        <div id="resultsInfo" class="status-text">Loading opportunities...</div>
       </div>
+      <div class="topline">
+        <div id="authInfo" class="status-text"></div>
+      </div>
+      <div id="cards" class="cards"></div>
     </div>
   </section>
 </main>
+
+<div id="jobModalBackdrop" class="modal-backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">
+    <div class="modal-head">
+      <div>
+        <h2 id="jobModalTitle">Job Details</h2>
+        <div id="jobModalSubtitle" class="status-text"></div>
+      </div>
+      <button id="jobModalClose" class="modal-close" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="modal-grid">
+      <div class="detail-block">
+        <div class="detail-label">Highlights</div>
+        <div id="jobModalBadges" class="meta"></div>
+      </div>
+      <div class="detail-block">
+        <div class="detail-label">Description</div>
+        <div id="jobModalDescription" class="detail-value"></div>
+      </div>
+      <div class="detail-block">
+        <div class="detail-label">Requirements</div>
+        <div id="jobModalMeta" class="detail-value"></div>
+      </div>
+      <div class="cta-row">
+        <span id="jobModalMatch" class="match"></span>
+        <div class="cta-actions">
+          <button id="jobModalApply" class="apply" type="button">Apply Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "http://localhost:4000/api";
+
+const elements = {
+  role: document.getElementById("roleFilter"),
+  location: document.getElementById("locationFilter"),
+  search: document.getElementById("searchFilter"),
+  sort: document.getElementById("sortFilter"),
+  experience: document.getElementById("experienceFilter"),
+  type: document.getElementById("typeFilter"),
+  mode: document.getElementById("modeFilter"),
+  applyFilters: document.getElementById("applyFiltersBtn"),
+  cards: document.getElementById("cards"),
+  resultsInfo: document.getElementById("resultsInfo"),
+  authInfo: document.getElementById("authInfo"),
+  modalBackdrop: document.getElementById("jobModalBackdrop"),
+  modalClose: document.getElementById("jobModalClose"),
+  modalTitle: document.getElementById("jobModalTitle"),
+  modalSubtitle: document.getElementById("jobModalSubtitle"),
+  modalBadges: document.getElementById("jobModalBadges"),
+  modalDescription: document.getElementById("jobModalDescription"),
+  modalMeta: document.getElementById("jobModalMeta"),
+  modalMatch: document.getElementById("jobModalMatch"),
+  modalApply: document.getElementById("jobModalApply")
+};
+
+const session = {
+  token: localStorage.getItem("token") || "",
+  role: (localStorage.getItem("role") || "").toLowerCase()
+};
+let currentJobs = [];
+let activeJobId = null;
+
+function getQueryParams() {
+  const params = new URLSearchParams();
+  const role = elements.role.value.trim();
+  const location = elements.location.value.trim();
+  const search = elements.search.value.trim();
+  const sort = elements.sort.value;
+  const experience = elements.experience.value;
+  const type = elements.type.value;
+  const mode = elements.mode.value;
+
+  if (search) params.set("search", search);
+  if (sort && sort !== "match") params.set("sort", sort);
+  if (role) params.set("role", role);
+  if (location) params.set("location", location);
+  if (experience && experience !== "Any") params.set("experience", experience);
+  if (type && type !== "Any") params.set("type", type);
+  if (mode && mode !== "Any") params.set("mode", mode);
+
+  return params;
+}
+
+function estimateMatch(job) {
+  let score = 72;
+  const roleText = elements.role.value.trim().toLowerCase();
+  const locationText = elements.location.value.trim().toLowerCase();
+  const searchText = elements.search.value.trim().toLowerCase();
+  const exp = elements.experience.value;
+  const type = elements.type.value.toLowerCase();
+  const mode = elements.mode.value.toLowerCase();
+  const title = String(job.title || "").toLowerCase();
+  const company = String(job.company || "").toLowerCase();
+  const desc = String(job.description || "").toLowerCase();
+  const loc = String(job.location || "").toLowerCase();
+  const jobType = String(job.job_type || "").toLowerCase();
+  const jobMode = String(job.mode || "").toLowerCase();
+  const jobExp = String(job.experience || "").toLowerCase();
+
+  if (roleText && (title.includes(roleText) || desc.includes(roleText))) score += 12;
+  if (searchText && (title.includes(searchText) || company.includes(searchText) || desc.includes(searchText))) score += 10;
+  if (locationText && loc.includes(locationText)) score += 8;
+  if (type && type !== "any" && jobType.includes(type)) score += 5;
+  if (mode && mode !== "any" && jobMode.includes(mode)) score += 6;
+  if (exp !== "Any" && jobExp.includes(exp.toLowerCase())) score += 5;
+
+  return Math.max(78, Math.min(score, 98));
+}
+
+function getBadges(job) {
+  const badges = [];
+  const title = String(job.title || "");
+  const firstWord = title.split(/\s+/).find(Boolean);
+  if (firstWord) badges.push(firstWord);
+  if (job.job_type) badges.push(job.job_type);
+  if (job.mode) badges.push(job.mode);
+  if (job.location) badges.push(job.location);
+  return badges.slice(0, 3);
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[char]));
+}
+
+function renderJobs(jobs) {
+  let displayJobs = Array.isArray(jobs) ? [...jobs] : [];
+  if (elements.sort.value === "match") {
+    displayJobs.sort((a, b) => estimateMatch(b) - estimateMatch(a));
+  }
+
+  if (!displayJobs.length) {
+    elements.cards.innerHTML = '<div class="empty">No jobs have been posted yet. Recruiters can add jobs from the Post New Job form.</div>';
+    return;
+  }
+
+  elements.cards.innerHTML = displayJobs.map((job) => {
+    const badges = getBadges(job).map((item) => `<span class="badge">${escapeHtml(item)}</span>`).join("");
+    const buttonLabel = session.token && session.role === "job seeker" ? "Apply Now" : "Apply Now";
+    const match = estimateMatch(job);
+    const description = job.description || "Explore this role and review the full details after signing in.";
+
+    return `
+      <article class="job">
+        <h3>${escapeHtml(job.title || "Untitled Role")}</h3>
+        <div class="meta">${badges}</div>
+        <p>${escapeHtml(description)}</p>
+        <div class="muted">${escapeHtml(job.company || "Unknown Company")}</div>
+        <div class="muted">Type: ${escapeHtml(job.job_type || "Not specified")} | Mode: ${escapeHtml(job.mode || "Not specified")}</div>
+        <div class="muted">Experience: ${escapeHtml(job.experience || "Not specified")} | Location: ${escapeHtml(job.location || "Not specified")}</div>
+        <div class="muted">Salary: ${escapeHtml(job.salary || "Not specified")}</div>
+        <div class="cta-row">
+          <span class="match">Match: ${match}%</span>
+          <div class="cta-actions">
+            <button class="ghost-btn" data-view-job-id="${job.id}">View Details</button>
+            <button class="apply" data-job-id="${job.id}">${buttonLabel}</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+async function loadJobs() {
+  elements.resultsInfo.textContent = "Loading opportunities...";
+  const params = getQueryParams();
+  const query = params.toString() ? `?${params.toString()}` : "";
+
+  try {
+    const res = await fetch(`${API_BASE}/public/jobs${query}`);
+    const contentType = res.headers.get("content-type") || "";
+    const data = contentType.includes("application/json")
+      ? await res.json()
+      : { message: "API is not returning JSON. Start the backend on http://localhost:4000." };
+
+    if (!res.ok) {
+      throw new Error(data.message || "Failed to load jobs");
+    }
+
+    if (!contentType.includes("application/json")) {
+      throw new Error(data.message);
+    }
+
+    currentJobs = Array.isArray(data) ? data : [];
+    renderJobs(currentJobs);
+    const count = currentJobs.length;
+    elements.resultsInfo.textContent = `${count} opportunity${count === 1 ? "" : "ies"} found`;
+  } catch (err) {
+    currentJobs = [];
+    elements.cards.innerHTML = `<div class="empty">${escapeHtml(err.message || "Unable to load jobs right now.")}</div>`;
+    elements.resultsInfo.textContent = "Unable to load opportunities";
+  }
+}
+
+function getJobById(jobId) {
+  return currentJobs.find((job) => String(job.id) === String(jobId)) || null;
+}
+
+function openJobModal(jobId) {
+  const job = getJobById(jobId);
+  if (!job) return;
+
+  activeJobId = String(job.id);
+  elements.modalTitle.textContent = job.title || "Job Details";
+  elements.modalSubtitle.textContent = `${job.company || "CareerConnect"}${job.location ? " • " + job.location : ""}`;
+  elements.modalBadges.innerHTML = getBadges(job).map((item) => `<span class="badge">${escapeHtml(item)}</span>`).join("");
+  elements.modalDescription.textContent = job.description || "No description provided for this role.";
+  elements.modalMeta.textContent = `Type: ${job.job_type || "Not specified"} | Mode: ${job.mode || "Not specified"} | Experience: ${job.experience || "Not specified"} | Salary: ${job.salary || "Not specified"} | Location: ${job.location || "Not specified"}`;
+  elements.modalMatch.textContent = `Match: ${estimateMatch(job)}%`;
+  elements.modalApply.textContent = "Apply Now";
+  elements.modalApply.disabled = false;
+  elements.modalBackdrop.classList.add("open");
+  elements.modalBackdrop.setAttribute("aria-hidden", "false");
+}
+
+function closeJobModal() {
+  activeJobId = null;
+  elements.modalBackdrop.classList.remove("open");
+  elements.modalBackdrop.setAttribute("aria-hidden", "true");
+}
+
+let loadTimer = null;
+function scheduleLoadJobs() {
+  window.clearTimeout(loadTimer);
+  loadTimer = window.setTimeout(loadJobs, 250);
+}
+
+async function applyToJob(jobId, button) {
+  if (!session.token) {
+    alert("Please log in as a job seeker to apply.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  if (session.role !== "job seeker") {
+    alert("Only job seeker accounts can apply for jobs. Please log in with a job seeker account.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  button.disabled = true;
+  const previousText = button.textContent;
+  button.textContent = "Applying...";
+
+  try {
+    const res = await fetch(`${API_BASE}/jobs/${jobId}/apply`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`
+      }
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Application failed");
+    }
+
+    button.textContent = "Applied";
+  } catch (err) {
+    alert(err.message || "Application failed");
+    button.disabled = false;
+    button.textContent = previousText;
+  }
+}
+
+elements.applyFilters.addEventListener("click", loadJobs);
+elements.cards.addEventListener("click", (event) => {
+  const viewButton = event.target.closest("button[data-view-job-id]");
+  if (viewButton) {
+    openJobModal(viewButton.dataset.viewJobId);
+    return;
+  }
+
+  const button = event.target.closest("button[data-job-id]");
+  if (!button) return;
+  applyToJob(button.dataset.jobId, button);
+});
+
+elements.modalApply.addEventListener("click", () => {
+  if (!activeJobId) return;
+  applyToJob(activeJobId, elements.modalApply);
+});
+
+elements.modalClose.addEventListener("click", closeJobModal);
+elements.modalBackdrop.addEventListener("click", (event) => {
+  if (event.target === elements.modalBackdrop) closeJobModal();
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && elements.modalBackdrop.classList.contains("open")) {
+    closeJobModal();
+  }
+});
+
+[elements.role, elements.location, elements.search].forEach((input) => {
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") loadJobs();
+  });
+  input.addEventListener("input", scheduleLoadJobs);
+});
+
+[elements.experience, elements.type, elements.mode, elements.sort].forEach((select) => {
+  select.addEventListener("change", scheduleLoadJobs);
+});
+
+elements.authInfo.textContent = session.token && session.role === "job seeker"
+  ? "All jobs are public. You are signed in as a job seeker and can apply directly."
+  : "All jobs are visible to everyone. To apply, sign in as a job seeker.";
+
+loadJobs();
+</script>
 </body>
 </html>

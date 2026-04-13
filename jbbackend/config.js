@@ -1,25 +1,29 @@
-// Import mysql2 package
 const mysql = require("mysql2");
 
-// Load environment variables
 require("dotenv").config();
 
-// Create MySQL connection
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,      // Database host
-  user: process.env.DB_USER,      // Database username
-  password: process.env.DB_PASSWORD, // Database password
-  database: process.env.DB_NAME   // Database name
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
 });
 
-// Connect to database
-db.connect(err => {
+db.connect((err) => {
   if (err) {
     console.log("Database connection error:", err);
-  } else {
-    console.log("✅ MySQL Connected");
+    return;
   }
+
+  console.log("MySQL Connected");
+  db.query(
+    "ALTER TABLE jobs ADD COLUMN IF NOT EXISTS mode VARCHAR(80) DEFAULT NULL AFTER job_type",
+    (alterErr) => {
+      if (alterErr) {
+        console.log("Jobs table migration warning:", alterErr.message || alterErr);
+      }
+    }
+  );
 });
 
-// Export connection so other files can use it
 module.exports = db;

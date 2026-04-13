@@ -74,6 +74,64 @@ function requireRole(role) {
   };
 }
 
+function buildJobWhereClause(filters = {}) {
+  const conditions = ["COALESCE(j.status,'open') <> 'closed'"];
+  const params = [];
+
+  const search = String(filters.search || "").trim();
+  if (search) {
+    conditions.push(
+      "(j.title LIKE ? OR j.company LIKE ? OR j.description LIKE ? OR j.location LIKE ? OR j.job_type LIKE ? OR j.mode LIKE ?)"
+    );
+    const like = `%${search}%`;
+    params.push(like, like, like, like, like, like);
+  }
+
+  const role = String(filters.role || "").trim();
+  if (role) {
+    conditions.push("(j.title LIKE ? OR j.description LIKE ?)");
+    const like = `%${role}%`;
+    params.push(like, like);
+  }
+
+  const location = String(filters.location || "").trim();
+  if (location) {
+    conditions.push("j.location LIKE ?");
+    params.push(`%${location}%`);
+  }
+
+  const experience = String(filters.experience || "").trim();
+  if (experience && experience.toLowerCase() !== "any") {
+    conditions.push("j.experience LIKE ?");
+    params.push(`%${experience}%`);
+  }
+
+  const type = String(filters.type || "").trim();
+  if (type && type.toLowerCase() !== "any") {
+    conditions.push("j.job_type LIKE ?");
+    params.push(`%${type}%`);
+  }
+
+  const mode = String(filters.mode || "").trim();
+  if (mode && mode.toLowerCase() !== "any") {
+    conditions.push("j.mode LIKE ?");
+    params.push(`%${mode}%`);
+  }
+
+  return {
+    whereSql: `WHERE ${conditions.join(" AND ")}`,
+    params
+  };
+}
+
+function getPublicJobSort(sortValue = "") {
+  const sort = String(sortValue || "").trim().toLowerCase();
+  if (sort === "oldest") return "j.id ASC";
+  if (sort === "company") return "j.company ASC, j.id DESC";
+  if (sort === "location") return "j.location ASC, j.id DESC";
+  return "j.id DESC";
+}
+
 async function findUserForLogin(identifier) {
   const tries = [
     { sql: "SELECT * FROM users WHERE email=? LIMIT 1", params: [identifier] },
@@ -249,10 +307,29 @@ router.post("/jobseeker/upload-resume", auth, requireRole("job seeker"), upload.
   }
 });
 
+router.get("/public/jobs", async (req, res) => {
+  try {
+    const { whereSql, params } = buildJobWhereClause(req.query);
+    const orderBy = getPublicJobSort(req.query.sort);
+    const rows = await query(
+      `SELECT j.id,j.title,j.company,j.job_type,j.mode,j.salary,j.experience,j.location,j.description,j.status,j.created_at,
+              u.name AS recruiter_name
+       FROM jobs j
+       LEFT JOIN users u ON u.id=j.recruiter_id
+       ${whereSql}
+       ORDER BY ${orderBy}`,
+      params
+    );
+    return res.json(rows);
+  } catch (_err) {
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
 router.get("/jobs", auth, async (_req, res) => {
   try {
     const rows = await query(
-      `SELECT j.id,j.title,j.company,j.job_type,j.salary,j.experience,j.location,j.description,j.status,j.created_at,
+      `SELECT j.id,j.title,j.company,j.job_type,j.mode,j.salary,j.experience,j.location,j.description,j.status,j.created_at,
               u.name AS recruiter_name
        FROM jobs j
        LEFT JOIN users u ON u.id=j.recruiter_id
@@ -294,7 +371,7 @@ router.get("/jobseeker/applications", auth, requireRole("job seeker"), async (re
   try {
     const rows = await query(
       `SELECT a.id,a.status,a.withdrawal_reason,a.applied_at,
-              j.id AS job_id,j.title,j.company,j.job_type,j.salary,j.experience,j.location
+              j.id AS job_id,j.title,j.company,j.job_type,j.mode,j.salary,j.experience,j.location
        FROM applications a
        JOIN jobs j ON j.id=a.job_id
        WHERE a.seeker_id=?
@@ -376,13 +453,13 @@ router.get("/recruiter/jobs", auth, requireRole("recruiter"), async (req, res) =
 
 router.post("/recruiter/jobs", auth, requireRole("recruiter"), async (req, res) => {
   try {
-    const { title, company, job_type, salary, experience, location, description } = req.body;
+    const { title, company, job_type, mode, salary, experience, location, description } = req.body;
     if (!title || !company) return res.status(400).json({ message: "Title and company required" });
 
     await query(
-      `INSERT INTO jobs (recruiter_id,title,company,job_type,salary,experience,location,description,status,created_at)
-       VALUES (?,?,?,?,?,?,?,?, 'open', NOW())`,
-      [req.user.id, title, company, job_type || null, salary || null, experience || null, location || null, description || null]
+      `INSERT INTO jobs (recruiter_id,title,company,job_type,mode,salary,experience,location,description,status,created_at)
+       VALUES (?,?,?,?,?,?,?,?,?, 'open', NOW())`,
+      [req.user.id, title, company, job_type || null, mode || null, salary || null, experience || null, location || null, description || null]
     );
 
     return res.json({ message: "Job created" });
@@ -399,13 +476,13 @@ router.put("/recruiter/jobs/:id", auth, requireRole("recruiter"), async (req, re
     const rows = await query("SELECT id FROM jobs WHERE id=? AND recruiter_id=? LIMIT 1", [id, req.user.id]);
     if (!rows.length) return res.status(404).json({ message: "Job not found" });
 
-    const { title, company, job_type, salary, experience, location, description, status } = req.body;
+    const { title, company, job_type, mode, salary, experience, location, description, status } = req.body;
 
     await query(
       `UPDATE jobs
-       SET title=?, company=?, job_type=?, salary=?, experience=?, location=?, description=?, status=?
+       SET title=?, company=?, job_type=?, mode=?, salary=?, experience=?, location=?, description=?, status=?
        WHERE id=? AND recruiter_id=?`,
-      [title || "", company || "", job_type || null, salary || null, experience || null, location || null, description || null, status || "open", id, req.user.id]
+      [title || "", company || "", job_type || null, mode || null, salary || null, experience || null, location || null, description || null, status || "open", id, req.user.id]
     );
 
     return res.json({ message: "Job updated" });

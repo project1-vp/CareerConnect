@@ -278,11 +278,21 @@ p{color:var(--muted);}
             </select>
           </div>
           <div class="input-box">
-            <label for="salary">Salary</label>
-            <input id="salary" type="text" required>
+            <label for="jobMode">Mode</label>
+            <select id="jobMode" required>
+              <option value="">Select</option>
+              <option>Offline</option>
+              <option>Hybrid</option>
+              <option>Work From Home</option>
+              <option>Remote</option>
+            </select>
           </div>
         </div>
         <div class="grid two">
+          <div class="input-box">
+            <label for="salary">Salary</label>
+            <input id="salary" type="text" required>
+          </div>
           <div class="input-box">
             <label for="experience">Experience</label>
             <input id="experience" type="text" required>
@@ -496,7 +506,7 @@ function renderJobs(){
       <div class="item">
         <div class="item-meta">
           <b>${j.title}</b>
-          <span>${j.company} | ${j.job_type || "N/A"}</span>
+          <span>${j.company} | ${j.job_type || "N/A"} | ${j.mode || "N/A"}</span>
           <span>Experience: ${j.experience || "N/A"} | Salary: ${j.salary || "N/A"}</span>
         </div>
         <div class="actions">
@@ -513,6 +523,7 @@ async function saveJob(e){
   const titleEl = document.getElementById("title");
   const companyEl = document.getElementById("company");
   const jobTypeEl = document.getElementById("jobType");
+  const jobModeEl = document.getElementById("jobMode");
   const salaryEl = document.getElementById("salary");
   const experienceEl = document.getElementById("experience");
   const locationEl = document.getElementById("location");
@@ -525,6 +536,7 @@ async function saveJob(e){
         title: (titleEl.value || "").trim(),
         company: (companyEl.value || "").trim(),
         job_type: jobTypeEl.value,
+        mode: jobModeEl.value,
         salary: (salaryEl.value || "").trim(),
         experience: (experienceEl.value || "").trim(),
         location: (locationEl.value || "").trim(),
@@ -555,6 +567,7 @@ async function editJob(id){
         title: newTitle.trim() || j.title,
         company: newCompany.trim() || j.company,
         job_type: j.job_type || "Full-Time",
+        mode: j.mode || "Offline",
         salary: j.salary || "",
         experience: newExp.trim() || j.experience || "",
         location: j.location || "",
