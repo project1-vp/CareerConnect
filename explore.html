@@ -182,7 +182,9 @@
 </div>
 
 <script>
-const API_BASE = "http://localhost:4000/api";
+const API_BASE = window.location.protocol === "file:"
+  ? "http://localhost:4000/api"
+  : `${window.location.origin}/api`;
 
 const elements = {
   role: document.getElementById("roleFilter"),
@@ -345,8 +347,11 @@ async function loadJobs() {
     const count = currentJobs.length;
     elements.resultsInfo.textContent = `${count} opportunity${count === 1 ? "" : "ies"} found`;
   } catch (err) {
+    const offlineMessage = err && err.message === "Failed to fetch"
+      ? "Cannot reach the backend server. Start it with start-careerconnect.bat or run jbbackend with npm start."
+      : (err.message || "Unable to load jobs right now.");
     currentJobs = [];
-    elements.cards.innerHTML = `<div class="empty">${escapeHtml(err.message || "Unable to load jobs right now.")}</div>`;
+    elements.cards.innerHTML = `<div class="empty">${escapeHtml(offlineMessage)}</div>`;
     elements.resultsInfo.textContent = "Unable to load opportunities";
   }
 }

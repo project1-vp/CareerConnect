@@ -293,7 +293,9 @@ function toast(message, options = {}){ showToast(message, options); }
 toast.success = (message, options = {}) => showToast(message, { ...options, type: "success" });
 toast.error = (message, options = {}) => showToast(message, { ...options, type: "error" });
 
-const API_BASE = "http://localhost:4000/api";
+const API_BASE = window.location.protocol === "file:"
+  ? "http://localhost:4000/api"
+  : `${window.location.origin}/api`;
 const token = localStorage.getItem("token");
 const role = (localStorage.getItem("role") || "").toLowerCase().trim();
 let usersData = [];

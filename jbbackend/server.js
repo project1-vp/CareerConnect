@@ -7,6 +7,7 @@ const cors = require("cors");
 
 const app = express();
 const PORT = Number(process.env.PORT || 4000);
+const projectRoot = path.join(__dirname, "..");
 
 const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) {
@@ -19,9 +20,42 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/uploads", express.static(uploadsDir));
 app.use("/api", require("./routes"));
+app.use(express.static(projectRoot));
 
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, service: "careerconnect-api", time: new Date().toISOString() });
+});
+
+app.get("/", (_req, res) => {
+  res.sendFile(path.join(projectRoot, "home.html"));
+});
+
+app.get("/home", (_req, res) => {
+  res.sendFile(path.join(projectRoot, "home.html"));
+});
+
+app.get("/login", (_req, res) => {
+  res.sendFile(path.join(projectRoot, "login.html"));
+});
+
+app.get("/register", (_req, res) => {
+  res.sendFile(path.join(projectRoot, "register.html"));
+});
+
+app.get("/explore", (_req, res) => {
+  res.sendFile(path.join(projectRoot, "explore.html"));
+});
+
+app.get("/jobseeker", (_req, res) => {
+  res.sendFile(path.join(projectRoot, "jobseeker.html"));
+});
+
+app.get("/recruiter", (_req, res) => {
+  res.sendFile(path.join(projectRoot, "recruiter.html"));
+});
+
+app.get("/admin", (_req, res) => {
+  res.sendFile(path.join(projectRoot, "admin.html"));
 });
 
 // Return JSON for runtime errors (including multer errors), so frontend gets readable messages.
@@ -42,4 +76,3 @@ app.use((err, _req, res, _next) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-

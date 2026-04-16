@@ -104,7 +104,11 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
   const password = document.getElementById("password").value;
 
   try{
-    const response = await fetch("http://localhost:4000/api/login",{
+    const apiBase = window.location.protocol === "file:"
+      ? "http://localhost:4000/api"
+      : `${window.location.origin}/api`;
+
+    const response = await fetch(`${apiBase}/login`,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({ email, password })
