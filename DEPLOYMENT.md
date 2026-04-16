@@ -62,6 +62,7 @@ Add these:
 
 ```env
 DB_HOST=your-db-host
+DB_PORT=3306
 DB_USER=your-db-user
 DB_PASSWORD=your-db-password
 DB_NAME=jobportal
