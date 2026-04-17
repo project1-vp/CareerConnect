@@ -1,4 +1,4 @@
-﻿require("dotenv").config();
+require("./env");
 
 const path = require("path");
 const fs = require("fs");
@@ -6,6 +6,7 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
+const HOST = process.env.HOST || "127.0.0.1";
 const PORT = Number(process.env.PORT || 4000);
 const projectRoot = path.join(__dirname, "..");
 
@@ -73,6 +74,15 @@ app.use((err, _req, res, _next) => {
   return res.status(500).json({ message: err && err.message ? err.message : "Server error" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+const server = app.listen(PORT, HOST, () => {
+  console.log(`Server running locally at http://${HOST}:${PORT}`);
+});
+
+server.on("error", (err) => {
+  if (err && err.code === "EADDRINUSE") {
+    console.error(`Port ${PORT} is already in use. Close the old server, then run again.`);
+    return;
+  }
+
+  console.error("Server startup error:", err);
 });

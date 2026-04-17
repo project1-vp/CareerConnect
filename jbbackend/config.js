@@ -1,6 +1,13 @@
 const mysql = require("mysql2");
 
-require("dotenv").config();
+const { envPath } = require("./env");
+
+const missingDbVars = ["DB_HOST", "DB_USER", "DB_NAME"].filter((key) => !process.env[key]);
+if (missingDbVars.length > 0) {
+  console.warn(
+    `Missing required DB environment variables: ${missingDbVars.join(", ")}. Checked ${envPath}`
+  );
+}
 
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
